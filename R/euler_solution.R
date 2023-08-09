@@ -265,16 +265,23 @@ misfit_stats <- function(x) {
 #' @inheritParams to_geomat
 #' @param sm logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
-#' @param sigdig integer indicating the number of decimal places (round) to be used.
-#' @param ... optional arguments passed to [euler_solution()]
+#' @param sigdig integer indicating the number of decimal places to be used.
+#' @param omerc logical. Whether the plot should be shown in the oblique
+#' Mercator projection with the Euler pole at North (`TRUE`) or not (`FALSE`, the default).
 #' @returns ggplot
+#' @import ggplot2
 #' @export
 #'
 #' @examples
 #' data(tintina)
 #' quick_plot(tintina)
-quick_plot <- function(x, sm = TRUE, sigdig = 1, ...) {
-  res <- euler_solution(x, ...)
+#' quick_plot(tintina, omerc = TRUE)
+#'
+#' data(south_atlantic)
+#' quick_plot(south_atlantic)
+#' quick_plot(south_atlantic, omerc = TRUE)
+quick_plot <- function(x, sm = TRUE, sigdig = 1, omerc = FALSE) {
+  res <- euler_solution(x)
   misf <- data_misfit(x, res)
 
   pts <- to_geomat(x)
@@ -282,16 +289,24 @@ quick_plot <- function(x, sm = TRUE, sigdig = 1, ...) {
     dplyr::mutate(misfit = misf)
 
   circle <- smallcircle(res[1], res[2], res[3])
-
   stats <- misfit_stats(x2$misfit)
 
-  ggplot() +
-    geom_sf(data = circle, lty = 2, color = "grey") +
-    geom_sf(data = x) +
-    geom_sf(data = x2, aes(color = abs(misfit))) +
-    coord_sf(xlim = c(sf::st_bbox(x)[1], sf::st_bbox(x)[3]), ylim = c(sf::st_bbox(x)[2], sf::st_bbox(x)[4])) +
-    scale_color_viridis_c("|Misfit| (°)") +
-    labs(
+  if(omerc){
+    ep <- tectonicr::euler_pole(res[1], res[2])
+    x <- tectonicr::geographical_to_PoR_sf(x, ep)
+    x2 <-  tectonicr::geographical_to_PoR_sf(x2, ep)
+    circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
+  }
+
+  box <- sf::st_bbox(x)
+
+  ggplot2::ggplot() +
+    ggplot2::geom_sf(data = circle, lty = 2, color = "darkgrey") +
+    ggplot2::geom_sf(data = x) +
+    ggplot2::geom_sf(data = x2, aes(color = abs(misfit))) +
+    ggplot2::coord_sf(xlim = c(box[1], box[3]), ylim = c(box[2], box[4])) +
+    ggplot2::scale_color_viridis_c("|Misfit| (°)") +
+    ggplot2::labs(
       title = "Best fit Euler pole and cone",
       subtitle = paste0(
         "Pole: ",

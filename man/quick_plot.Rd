@@ -4,7 +4,7 @@
 \alias{quick_plot}
 \title{Plot the Euler pole solution}
 \usage{
-quick_plot(x, sm = TRUE, sigdig = 1, ...)
+quick_plot(x, sm = TRUE, sigdig = 1, omerc = FALSE)
 }
 \arguments{
 \item{x}{a \code{matrix} or \code{data.frame} containing the geographical coordinates,
@@ -13,9 +13,10 @@ or a \code{sf} object}
 \item{sm}{logical. Whether the structure described by the points \code{x} is
 expected to follow small (\code{TRUE}) or great circle (\code{FALSE}) arcs?}
 
-\item{sigdig}{integer indicating the number of decimal places (round) to be used.}
+\item{sigdig}{integer indicating the number of decimal places to be used.}
 
-\item{...}{optional arguments passed to \code{\link[=euler_solution]{euler_solution()}}}
+\item{omerc}{logical. Whether the plot should be shown in the oblique
+Mercator projection with the Euler pole at North (\code{TRUE}) or not (\code{FALSE}, the default).}
 }
 \value{
 ggplot
@@ -26,4 +27,9 @@ Plot the Euler pole solution
 \examples{
 data(tintina)
 quick_plot(tintina)
+quick_plot(tintina, omerc = TRUE)
+
+data(south_atlantic)
+quick_plot(south_atlantic)
+quick_plot(south_atlantic, omerc = TRUE)
 }
