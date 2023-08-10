@@ -48,5 +48,4 @@ Tobias Stephan
 
 - <div class="csl-entry">Wdowinski, S. (1998). A theory of intraplate tectonics. <i>Journal of Geophysical Research: Solid Earth</i>, <i>103</i>(3), 5037–5059. http://dx.doi.org/10.1029/97JB03390</div>
 
-- <div class="csl-entry">Price, R. & Carmicheal, D. (1986). Geometric test for Late Cretaceous-Paleogene intracontinental transform faulting in the Canadian Cordillera. <i>Geology</i>, 468, 14(6), 468-471.
-doi: 10.1130/0091-7613(1986)14<468:GTFLCI>2.0.CO;2</div>
+- <div class="csl-entry">Price, R. & Carmicheal, D. (1986). Geometric test for Late Cretaceous-Paleogene intracontinental transform faulting in the Canadian Cordillera. <i>Geology</i>, 468, 14(6), 468-471. doi: 10.1130/0091-7613(1986)14<468:GTFLCI>2.0.CO;2</div>
