@@ -384,7 +384,7 @@ cartesian_to_geographical2 <- function(x) {
 
 #' @rdname coordinates
 geographical_to_acoscartesian <- function(x) {
-  structr:::cartesian_to_acoscartesian(
+  structr::cartesian_to_acoscartesian(
     geographical_to_cartesian2(x)
   )
 }
@@ -392,6 +392,6 @@ geographical_to_acoscartesian <- function(x) {
 #' @rdname coordinates
 acoscartesian_to_geographical <- function(x) {
   cartesian_to_geographical2(
-    structr:::acoscartesian_to_cartesian(x)
+    structr::acoscartesian_to_cartesian(x)
   )
 }
