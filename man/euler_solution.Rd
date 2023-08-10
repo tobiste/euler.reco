@@ -29,6 +29,9 @@ Finds the best Euler pole solution for a set of geographic locations that
 are aligned along a geological structure.
 }
 \examples{
+test <- smallcircle(30, 150, 35)
+euler_solution(test)
+
 # Example from Price & Carmicheal (1986), GEOLOGY:
 
 # from matrix
@@ -37,9 +40,9 @@ rmt_mat <- rbind(
   "bigbend" = c(52.25, -122.65),
   "washington" = c(47.85, -121.85)
 )
-# from data.frame
 euler_solution(rmt_mat)
 
+# from data.frame
 rmt_df <- data.frame("lat" = rmt_mat[, 1], "lon" = rmt_mat[, 2])
 euler_solution(rmt_df)
 
@@ -52,5 +55,6 @@ euler_solution(tintina)
 euler_solution(tintina, densify = TRUE)
 
 data(south_atlantic)
-euler_solution(south_atlantic)
+euler_solution(south_atlantic, sm = TRUE)
+euler_solution(south_atlantic, densify = TRUE, sm = TRUE)
 }

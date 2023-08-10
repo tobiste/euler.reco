@@ -43,7 +43,9 @@ Tobias Stephan
 ## References
 - <div class="csl-entry">Ramsay, J. G. (1967). <i>Folding and fracturing of rocks. McGraw-Hill Book Company</i>, New York</div>
 
-- <div class="csl-entry">Kroner, U., Roscher, M., Romer, R. L. (2016). Ancient plate kinematics derived from the deformation pattern of continental crust: Paleo- and Neo-Tethys opening coeval with prolonged Gondwana–Laurussia convergence. <i>Tectonophysics</i>. 681, 330-233. https://doi.org/10.1016/j.tecto.2016.03.034</div>
+- <div class="csl-entry">Gray, N.H., Geiser, P.A., Geiser, J.R. (1980). On the least-square fit of small and great circles to spherically projected data. <i>Mathematical Geology</i>, <i>12</i>(3)</div>
+
+- <div class="csl-entry">Kroner, U., Roscher, M., Romer, R. L. (2016). Ancient plate kinematics derived from the deformation pattern of continental crust: Paleo- and Neo-Tethys opening coeval with prolonged Gondwana–Laurussia convergence. <i>Tectonophysics</i>. <i>681</i>, 330-233. https://doi.org/10.1016/j.tecto.2016.03.034</div>
 
 
 - <div class="csl-entry">Wdowinski, S. (1998). A theory of intraplate tectonics. <i>Journal of Geophysical Research: Solid Earth</i>, <i>103</i>(3), 5037–5059. http://dx.doi.org/10.1029/97JB03390</div>

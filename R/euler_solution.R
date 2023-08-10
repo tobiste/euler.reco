@@ -1,35 +1,26 @@
 ep_from_sc <- function(x) {
-  # x_cart <- geographical_to_acoscartesian(x) |>
-  #   acoscartesian_to_cartesian()
   res <- x |>
     geographical_to_cartesian2() |>
-    #as.data.frame() |>
-    structr::best_cone()
-  coords <- res |>
-    as.matrix() |>
-    t() |>
+    structr::best_fit_plane()
+  coords <- res$axis_c |>
     cartesian_to_geographical2()
   names(coords) <- c("lat", "lon")
-  angle <- tectonicr::rad2deg(res[5])
-  misfit <- res[4]
+  angle <- res$cone_angle * 180 / pi
+  if(angle > 90) angle = 180 - angle
+  misfit <- res$r_s
   names(angle) <- "angle"
   names(misfit) <- "misfit"
   c(coords, angle, misfit)
 }
 
 ep_from_gc <- function(x) {
-  # x_cart <- geographical_to_acoscartesian(x) |>
-  #   acoscartesian_to_cartesian()
   res <- x |>
     geographical_to_cartesian2() |>
-    #as.data.frame() |>
-    structr::best_plane()
-  coords <- res |>
-    as.matrix() |>
-    t() |>
+    structr::best_fit_plane()
+  coords <- res$axis_g |>
     cartesian_to_geographical2()
   names(coords) <- c("lat", "lon")
-  misfit <- res[4]
+  misfit <- res$r_g
   names(misfit) <- "misfit"
   c(coords, angle = 90, misfit)
 }
@@ -54,6 +45,9 @@ ep_from_gc <- function(x) {
 #' @export
 #'
 #' @examples
+#' test <- smallcircle(30, 150, 35)
+#' euler_solution(test)
+#'
 #' # Example from Price & Carmicheal (1986), GEOLOGY:
 #'
 #' # from matrix
@@ -62,9 +56,9 @@ ep_from_gc <- function(x) {
 #'   "bigbend" = c(52.25, -122.65),
 #'   "washington" = c(47.85, -121.85)
 #' )
-#' # from data.frame
 #' euler_solution(rmt_mat)
 #'
+#' # from data.frame
 #' rmt_df <- data.frame("lat" = rmt_mat[, 1], "lon" = rmt_mat[, 2])
 #' euler_solution(rmt_df)
 #'
@@ -77,7 +71,8 @@ ep_from_gc <- function(x) {
 #' euler_solution(tintina, densify = TRUE)
 #'
 #' data(south_atlantic)
-#' euler_solution(south_atlantic)
+#' euler_solution(south_atlantic, sm = TRUE)
+#' euler_solution(south_atlantic, densify = TRUE, sm = TRUE)
 euler_solution <- function(x, sm = TRUE, densify = FALSE, ...) {
   if (densify) {
     is.sf <- inherits(x, "sf")
@@ -221,8 +216,12 @@ smallcircle <- function(lat, lon, angle = 90, n = 1000L) {
 #'
 #' @examples
 #' data(tintina)
-#' res <- euler_solution(tintina)
-#' data_deviation(tintina, res)
+#' res1 <- euler_solution(tintina)
+#' data_deviation(tintina, res1)
+#'
+#' data(south_atlantic)
+#' res2 <- euler_solution(south_atlantic)
+#' data_deviation(south_atlantic, res2)
 data_deviation <- function(x, ep, sm = TRUE) {
   pts <- to_geomat(x) |>
     geographical_to_cartesian2()
@@ -235,7 +234,12 @@ data_deviation <- function(x, ep, sm = TRUE) {
 }
 
 ep_pts_distance <- function(x, y, z, ep) {
-  tectonicr::angle_vectors(c(x, y, z), ep)
+  d <- tectonicr::angle_vectors(c(x, y, z), ep)
+  if(d > 90) {
+    180-d
+  } else {
+      d
+    }
 }
 
 #' Distribution of deviation angles
@@ -284,7 +288,7 @@ deviation_stats <- function(x) {
 #' @inheritParams to_geomat
 #' @param sm logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
-#' @param sigdig integer. Rounds the values to the specified number of significant digits ([signif()])
+#' @param sigdig integer rounds the values in its first argument to the specified number of decimal places (default 2)
 #' @param omerc logical. Whether the plot should be shown in the oblique
 #' Mercator projection with the Euler pole at North (`TRUE`) or not (`FALSE`, the default).
 #' @param expand two element vector expand the map limits in latitude and longitude (`c(1, 1)` (degrees) by default)
@@ -298,10 +302,11 @@ deviation_stats <- function(x) {
 #' quick_plot(tintina, omerc = TRUE)
 #'
 #' data(south_atlantic)
-#' quick_plot(south_atlantic)
-#' quick_plot(south_atlantic, omerc = TRUE)
-quick_plot <- function(x, sm = TRUE, sigdig = 1, omerc = FALSE, expand = c(1, 1)) {
-  res <- euler_solution(x)
+#' quick_plot(south_atlantic, sm = FALSE)
+#' quick_plot(south_atlantic, sm = TRUE)
+#' quick_plot(south_atlantic, sm = TRUE, omerc = TRUE)
+quick_plot <- function(x, sm = TRUE, sigdig = 2, omerc = FALSE, expand = c(1, 1)) {
+  res <- euler_solution(x, sm)
   deviation <- data_deviation(x, res)
 
   pts <- to_geomat(x)
@@ -334,22 +339,22 @@ quick_plot <- function(x, sm = TRUE, sigdig = 1, omerc = FALSE, expand = c(1, 1)
       title = "Best fit Euler pole and cone",
       subtitle = paste0(
         "Pole: ",
-        signif(res[1], sigdig),
+        round(res[1], sigdig),
         "\u00b0 (lat), ",
-        signif(res[2], sigdig),
+        round(res[2], sigdig),
         "\u00b0 (lon) | Apical half angle of cone: ",
-        signif(res[3], sigdig),
+        round(res[3], sigdig),
         "°"
       ),
       caption = paste0(
-        "Misfit: ", signif(res[4], sigdig),
-        " | Dispersion of deviation from 0\u00b0: ", signif(stats$disp, sigdig),
+        "Misfit: ", round(res[4], 3),
+        " | Dispersion of deviation from 0\u00b0: ", round(stats$disp, 3),
         " | Mean deviation: ",
-        signif(stats$mean, sigdig), "\u00b0 \u00b1 ",
-        signif(stats$sd, sigdig),
+        round(stats$mean, 2), "\u00b0 \u00b1 ",
+        round(stats$sd, 2),
         "\u00b0 (sd.) | Rayleigh test: ",
-        signif(stats$Rayleigh.test, sigdig),
-        " (p: ", signif(stats$p.value, sigdig), ")"
+        round(stats$Rayleigh.test, 3),
+        " (p: ", round(stats$p.value, 3), ")"
       )
     )
 }

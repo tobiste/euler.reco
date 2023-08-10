@@ -23,6 +23,10 @@ of the Euler pole solution
 }
 \examples{
 data(tintina)
-res <- euler_solution(tintina)
-data_deviation(tintina, res)
+res1 <- euler_solution(tintina)
+data_deviation(tintina, res1)
+
+data(south_atlantic)
+res2 <- euler_solution(south_atlantic)
+data_deviation(south_atlantic, res2)
 }
