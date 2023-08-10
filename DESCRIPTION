@@ -1,10 +1,11 @@
 Type: Package
 Package: euler.reco
-Title: Euler pol ereconstruction
+Title: Euler pole reconstruction
 Version: 0.1.0
 Author: Tobias Stephan
 Maintainer: The package maintainer <tobias.stephan1@yahoo.com>
-Description: Free and open-source R package for analyzing and visualizing orientation and stress data for structural geology.
+Description: Free and open-source R package for finding the best Euler pole 
+solution describing the orientation of geological structures
 License: MIT + file LICENSE
 Depends: 
     R (>= 3.5.0)
@@ -18,7 +19,7 @@ Suggests:
     rmarkdown
 Remotes: 
     tobiste/tectonicr,
-    tobiste/strucR
+    tobiste/structr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
