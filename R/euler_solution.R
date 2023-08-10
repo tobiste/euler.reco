@@ -335,19 +335,19 @@ quick_plot <- function(x, sm = TRUE, sigdig = 1, omerc = FALSE, expand = c(1, 1)
       subtitle = paste0(
         "Pole: ",
         signif(res[1], sigdig),
-        "° (lat), ",
+        "\u00b0 (lat), ",
         signif(res[2], sigdig),
-        "° (lon) | Apical half angle of cone: ",
+        "\u00b0 (lon) | Apical half angle of cone: ",
         signif(res[3], sigdig),
         "°"
       ),
       caption = paste0(
         "Misfit: ", signif(res[4], sigdig),
-        " | Dispersion of deviation from 0°: ", signif(stats$disp, sigdig),
+        " | Dispersion of deviation from 0\u00b0: ", signif(stats$disp, sigdig),
         " | Mean deviation: ",
-        signif(stats$mean, sigdig), "° ± ",
+        signif(stats$mean, sigdig), "\u00b0 \u00b1 ",
         signif(stats$sd, sigdig),
-        "° (sd.) | Rayleigh test: ",
+        "\u00b0 (sd.) | Rayleigh test: ",
         signif(stats$Rayleigh.test, sigdig),
         " (p: ", signif(stats$p.value, sigdig), ")"
       )
