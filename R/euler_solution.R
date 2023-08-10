@@ -3,37 +3,40 @@ ep_from_sc <- function(x) {
   #   acoscartesian_to_cartesian()
   res <- x |>
     geographical_to_cartesian2() |>
-    as.data.frame() |>
+    #as.data.frame() |>
     structr::best_cone()
   coords <- res |>
     as.matrix() |>
     t() |>
-    acoscartesian_to_geographical()
+    cartesian_to_geographical2()
   names(coords) <- c("lat", "lon")
-  angle <- res[4]
-  names(angle) <- ("angle")
-  c(coords, angle)
+  angle <- tectonicr::rad2deg(res[5])
+  misfit <- res[4]
+  names(angle) <- "angle"
+  names(misfit) <- "misfit"
+  c(coords, angle, misfit)
 }
 
 ep_from_gc <- function(x) {
   # x_cart <- geographical_to_acoscartesian(x) |>
   #   acoscartesian_to_cartesian()
   res <- x |>
-    geographical_to_cartesian2()
-  as.data.frame() |>
+    geographical_to_cartesian2() |>
+    #as.data.frame() |>
     structr::best_plane()
   coords <- res |>
     as.matrix() |>
     t() |>
-    acoscartesian_to_geographical()
+    cartesian_to_geographical2()
   names(coords) <- c("lat", "lon")
-  R <- res[4]
-  c(coords, R)
+  misfit <- res[4]
+  names(misfit) <- "misfit"
+  c(coords, angle = 90, misfit)
 }
 
 #' Euler pole solution for geological structures
 #'
-#' find the best Euler pole solution for a set of geographic locations that
+#' Finds the best Euler pole solution for a set of geographic locations that
 #' are aligned along a geological structure.
 #'
 #' @inheritParams to_geomat
@@ -46,8 +49,8 @@ ep_from_gc <- function(x) {
 #'  (only if `densify = TRUE`).
 #' @importFrom sf st_coordinates st_as_sf
 #' @importFrom smoothr densify
-#' @returns three-element vector given the latitude, longitude, and apical
-#' angle of the best fit Euler pole.
+#' @returns numeric vector given the latitude (in degrees), longitude (in degrees), the misfit (0 - low, 1 - high),
+#' and (for small circle structures) the apical angle (in degrees) of the best fit Euler pole.
 #' @export
 #'
 #' @examples
@@ -72,6 +75,9 @@ ep_from_gc <- function(x) {
 #' data(tintina)
 #' euler_solution(tintina)
 #' euler_solution(tintina, densify = TRUE)
+#'
+#' data(south_atlantic)
+#' euler_solution(south_atlantic)
 euler_solution <- function(x, sm = TRUE, densify = FALSE, ...) {
   if (densify) {
     is.sf <- inherits(x, "sf")
@@ -112,10 +118,10 @@ euler_solution <- function(x, sm = TRUE, densify = FALSE, ...) {
 geo_distribution <- function(x) {
   x_coords <- to_geomat(x)
   x_cart <- geographical_to_cartesian2(x)
-  xmean <- structr::to_vec(x_cart) |>
+  xmean <- x_cart |>
     structr::v_mean() |>
-    cartesian_to_geographical()
-  xsd <- structr::to_vec(x_cart) |>
+    tectonicr::cartesian_to_geographical()
+  xsd <- x_cart |>
     structr::v_delta() |>
     tectonicr::rad2deg()
   c(lat = xmean[1], lon = xmean[2], delta = xsd)
@@ -200,7 +206,7 @@ smallcircle <- function(lat, lon, angle = 90, n = 1000L) {
 
 
 
-#' Misfit of input data from Euler pole solution
+#' Deviation of input data from Euler pole solution
 #'
 #' Calculates angular distance of the input points to the small or great circle
 #' of the Euler pole solution
@@ -216,11 +222,10 @@ smallcircle <- function(lat, lon, angle = 90, n = 1000L) {
 #' @examples
 #' data(tintina)
 #' res <- euler_solution(tintina)
-#' data_misfit(tintina, res)
-data_misfit <- function(x, ep, sm = TRUE) {
+#' data_deviation(tintina, res)
+data_deviation <- function(x, ep, sm = TRUE) {
   pts <- to_geomat(x) |>
     geographical_to_cartesian2()
-
 
   epc <- tectonicr::geographical_to_cartesian(c(ep[1], ep[2]))
 
@@ -233,30 +238,44 @@ ep_pts_distance <- function(x, y, z, ep) {
   tectonicr::angle_vectors(c(x, y, z), ep)
 }
 
-#' Distribution of misfit angles
+#' Distribution of deviation angles
+#'
+#' returns the mean deviation, its standard deviation, the variance,
+#' the dispersion from zero deviation, the 95% confidence angle, the minimum
+#' and maximum absolute deviation angles, and the test results of the Rayleigh
+#' test against a specified mean (i.e. zero deviation).
 #'
 #' @param x Misfit angles in degrees
 #'
-#' @returns three column vector giving the mean misfit angle,
-#' its standard deviation, the dispersion, the 95% confidence angle, and the minimum and maximum absolute angles
+#' @returns `data.frame` giving the mean misfit angle,
+#' its standard deviation, the dispersion from `0` degrees, the 95% confidence angle,
+#' the minimum and maximum absolute angles,
+#' and the V2 test results (alternative hypothesis is an unimodal distribution around `0` degrees)
 #'
 #' @export
 #'
 #' @examples
 #' data(tintina)
 #' res <- euler_solution(tintina)
-#' m <- data_misfit(tintina, res)
-#' misfit_stats(m)
-misfit_stats <- function(x) {
+#' m <- data_deviation(tintina, res)
+#' deviation_stats(m)
+deviation_stats <- function(x) {
   #x <- tectonicr::deviation_norm(x)
-  mean_misfit <- tectonicr::circular_mean(x)
-  if (mean_misfit > 90) {
-    mean_misfit <- 180 - mean_misfit
+  mean_dev <- tectonicr::circular_mean(x)
+  if (mean_dev > 90) {
+    mean_dev <- 180 - mean_dev
   }
-  sd_misfit <- tectonicr::circular_sd(x)
-  disp <- tectonicr::circular_dispersion(x)
-  conf.angle <- tectonicr::confidence_angle(x)
-  c(mean = mean_misfit, sd = sd_misfit, disp = disp, CI95 = conf.angle, min = min(abs(x)), max = max(abs(x)))
+  R = tectonicr::rayleigh_test(x, mu = 0)
+
+  data.frame(
+    mean = mean_dev,
+    sd =  tectonicr::circular_sd(x),
+    var = tectonicr::circular_var(x),
+    disp = tectonicr::circular_dispersion(x, 0),
+    CI95 = tectonicr::confidence_angle(x),
+    min = min(abs(x)), max = max(abs(x)),
+    Rayleigh.test = R$statistic, p.value = R$p.value
+    )
 }
 
 
@@ -265,9 +284,10 @@ misfit_stats <- function(x) {
 #' @inheritParams to_geomat
 #' @param sm logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
-#' @param sigdig integer indicating the number of decimal places to be used.
+#' @param sigdig integer. Rounds the values to the specified number of significant digits ([signif()])
 #' @param omerc logical. Whether the plot should be shown in the oblique
 #' Mercator projection with the Euler pole at North (`TRUE`) or not (`FALSE`, the default).
+#' @param expand two element vector expand the map limits in latitude and longitude (`c(1, 1)` (degrees) by default)
 #' @returns ggplot
 #' @import ggplot2
 #' @export
@@ -280,16 +300,20 @@ misfit_stats <- function(x) {
 #' data(south_atlantic)
 #' quick_plot(south_atlantic)
 #' quick_plot(south_atlantic, omerc = TRUE)
-quick_plot <- function(x, sm = TRUE, sigdig = 1, omerc = FALSE) {
+quick_plot <- function(x, sm = TRUE, sigdig = 1, omerc = FALSE, expand = c(1, 1)) {
   res <- euler_solution(x)
-  misf <- data_misfit(x, res)
+  deviation <- data_deviation(x, res)
 
   pts <- to_geomat(x)
+  suppressWarnings(
   x2 <- sf::st_cast(x, "POINT") |>
-    dplyr::mutate(misfit = misf)
+    dplyr::mutate(deviation = deviation)
+  )
 
   circle <- smallcircle(res[1], res[2], res[3])
-  stats <- misfit_stats(x2$misfit)
+  suppressMessages(
+  stats <- deviation_stats(x2$deviation)
+  )
 
   if(omerc){
     ep <- tectonicr::euler_pole(res[1], res[2])
@@ -303,24 +327,29 @@ quick_plot <- function(x, sm = TRUE, sigdig = 1, omerc = FALSE) {
   ggplot2::ggplot() +
     ggplot2::geom_sf(data = circle, lty = 2, color = "darkgrey") +
     ggplot2::geom_sf(data = x) +
-    ggplot2::geom_sf(data = x2, aes(color = abs(misfit))) +
-    ggplot2::coord_sf(xlim = c(box[1], box[3]), ylim = c(box[2], box[4])) +
-    ggplot2::scale_color_viridis_c("|Misfit| (°)") +
+    ggplot2::geom_sf(data = x2, aes(color = abs(deviation))) +
+    ggplot2::coord_sf(xlim = c(box[1] -expand[2], box[3] + expand[2]), ylim = c(box[2]-expand[1], box[4]+expand[1])) +
+    ggplot2::scale_color_viridis_c("|Deviation| (°)") +
     ggplot2::labs(
       title = "Best fit Euler pole and cone",
       subtitle = paste0(
         "Pole: ",
-        round(res[1], sigdig),
+        signif(res[1], sigdig),
         "° (lat), ",
-        round(res[2], sigdig),
+        signif(res[2], sigdig),
         "° (lon) | Apical half angle of cone: ",
-        round(res[3], sigdig),
+        signif(res[3], sigdig),
         "°"
       ),
       caption = paste0(
-        "GOF: ", round(stats[3], 3),
-        " | Mean misfit: ",
-        round(stats[1], 2), "° ± ", round(stats[2], 2), "° (sd.)"
+        "Misfit: ", signif(res[4], sigdig),
+        " | Dispersion of deviation from 0°: ", signif(stats$disp, sigdig),
+        " | Mean deviation: ",
+        signif(stats$mean, sigdig), "° ± ",
+        signif(stats$sd, sigdig),
+        "° (sd.) | Rayleigh test: ",
+        signif(stats$Rayleigh.test, sigdig),
+        " (p: ", signif(stats$p.value, sigdig), ")"
       )
     )
 }
@@ -341,7 +370,7 @@ geographical_to_cartesian2 <- function(x) {
   cx <- cos(x[, 1]) * cos(x[, 2])
   cy <- cos(x[, 1]) * sin(x[, 2])
   cz <- sin(x[, 1])
-  cbind(cx, cy, cz)
+  cbind(x=cx, y=cy, z=cz)
 }
 
 #' @rdname coordinates

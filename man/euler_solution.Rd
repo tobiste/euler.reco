@@ -21,11 +21,11 @@ Densification would yield equally spaced points along the line.}
 (only if \code{densify = TRUE}).}
 }
 \value{
-three-element vector given the latitude, longitude, and apical
-angle of the best fit Euler pole.
+numeric vector given the latitude (in degrees), longitude (in degrees), the misfit (0 - low, 1 - high),
+and (for small circle structures) the apical angle (in degrees) of the best fit Euler pole.
 }
 \description{
-find the best Euler pole solution for a set of geographic locations that
+Finds the best Euler pole solution for a set of geographic locations that
 are aligned along a geological structure.
 }
 \examples{
@@ -50,4 +50,7 @@ euler_solution(rmt_sf)
 data(tintina)
 euler_solution(tintina)
 euler_solution(tintina, densify = TRUE)
+
+data(south_atlantic)
+euler_solution(south_atlantic)
 }
