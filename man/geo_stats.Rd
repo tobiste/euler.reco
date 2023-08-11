@@ -17,6 +17,6 @@ three-element vector giving the mean geographic location, the standard deviation
 Statistics on the distribution of geographic locations
 }
 \examples{
-xy <- cbind(lat=c(12,14,16), lon=c(-179,179, 177))
+xy <- cbind(lat = c(12, 14, 16), lon = c(-179, 179, 177))
 geo_stats(xy)
 }
