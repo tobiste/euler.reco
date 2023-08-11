@@ -32,7 +32,11 @@ library('euler.reco')
 ```
 
 ## Documentation
-...
+A brief documentation and application is presented in the vignette file.
+
+```
+`vignette('intro', package = "euler.reco")`
+```
 
 ## Author
 Tobias Stephan

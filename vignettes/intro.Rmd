@@ -1,0 +1,58 @@
+---
+title: "structr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{structr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Geological structures (e.g. faults, mid-ocean ridges, ...)  form spherical structures on the Earth's surface, that can be described in terms of *small* and *great circles* on a sphere. Because of the genetically link to plate motion, the associated axis centered in those circles and passing through the Earth's center can be related to recent or past relative motions of neighboring plates. Thus, the axis (or *Euler poles*) can be used for reconstructing plate motion, or exploring geometrical relationships in tectonic settings.
+
+```{r setup}
+library(euler.reco)
+```
+
+## Data import
+
+The data used for the approximation can be geological structure. Either you have the geographic coordinates of the the structures vertices (as a matrix or data.frame), or you import the structure as a shape file (or other spatial file formats) via `sf::read_sf()`. The example dataset, i.e. the trace of *Tintina Fault* and the *Rocky Mountain Trench* in the Canadian Cordillera, is giving as a `sf` object.
+```{r data}
+data('tintina')
+tintina
+```
+## Find and evaluate the best-fitting small or circle for the geological structure
+
+The best fit small circle can be retrieved by `euler_solution()`. In our example, the structure represents a strike-slip fault and, thus, expected to follow a small-circle trajectory of the Euler pole to be approximated. Thus, we set the `sm` argument to `TRUE` in order to calculate a small circle fitting the structure:
+```{r euler_solution}
+res <- euler_solution(tintina, sm = TRUE)
+res
+```
+The function returns the coordinates of the best fit axis centered in the small circle and the small circles angle. 
+Furthermore, it returns a misfit value, i.e. the residual of the least squares of the sum of the vectors. Here the misfit is $0.004$ reflecting a good fit.
+
+A good approximation of the structure by the small circle should have a low deviation of the structure from the small circle (`data_deviation()`). The distributions of the deviations can be evaluated by:
+
+```{r solution_stats, message=FALSE}
+  data_deviation(tintina, res) |>
+  deviation_stats()
+```
+In our example, the dispersion of the deviation angles from zero deviation (perfect fit) is very low. The zero deviation is within the 95% confidence interval as indicated by by the mean $\pm$ the confidence angle. A Rayleigh test is also performed, here with the alternative hypothesis that the data is (circularly) normally distributed around 0. The null hypothesis is rejected and the alternative can be accepted. 
+
+## Visualization
+
+The solution can be quickly visualized through:
+```{r plot}
+quick_plot(tintina)
+```
+
+The Mercator projection can also be transformed into a oblique Mercator projection where the approximated Euler pole will be at the top of the map. In such a coordinate system small and great circles are horizontal and vertical lines, respectively. In our example, the structure is a strike-slip fault, i.e. small circle structure. Thus we expect, the structure to be nearly horizontal in the reprojection:
+```{r plot2}
+quick_plot(tintina, omerc = TRUE)
+```

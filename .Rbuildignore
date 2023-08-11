@@ -4,3 +4,5 @@
 ^\.github$
 ^euler\.reco\.Rproj$
 ^LICENSE\.md$
+^doc$
+^Meta$
