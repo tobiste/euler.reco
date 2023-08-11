@@ -32,10 +32,10 @@ library('euler.reco')
 ```
 
 ## Documentation
-A brief documentation and application is presented in the vignette file.
+A brief documentation and application are presented in the vignette file.
 
 ```
-`vignette('intro', package = "euler.reco")`
+vignette('intro', package = "euler.reco")
 ```
 
 ## Author
