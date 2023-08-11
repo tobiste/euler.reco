@@ -7,8 +7,8 @@
 euler_solution(x, sm = TRUE, densify = FALSE, ...)
 }
 \arguments{
-\item{x}{a \code{matrix} or \code{data.frame} containing the geographical coordinates,
-or a \code{sf} object}
+\item{x}{either a \code{matrix} or \code{data.frame} containing the geographical coordinates,
+or a \code{sf} object.}
 
 \item{sm}{logical. Whether the structure described by the points \code{x} is
 expected to follow small (\code{TRUE}) or great circle (\code{FALSE}) arcs?}
@@ -32,7 +32,7 @@ are aligned along a geological structure.
 test <- smallcircle(30, 150, 35)
 euler_solution(test)
 
-# Example from Price & Carmicheal (1986), GEOLOGY:
+# Example from Price and Carmicheal (1986), GEOLOGY:
 
 # from matrix
 rmt_mat <- rbind(

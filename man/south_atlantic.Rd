@@ -11,7 +11,7 @@ An object of class \code{sf}
 data('south_atlantic')
 }
 \description{
-example data set of a transform fualt crossing the South Atlantic ridge
+example data set of a transform fault crossing the South Atlantic ridge
 }
 \examples{
 data("south_atlantic")

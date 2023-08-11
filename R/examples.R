@@ -1,6 +1,6 @@
 #' Tintina fault
 #'
-#' example data set
+#' @description example data set
 #'
 #' @docType data
 #'
@@ -15,7 +15,7 @@
 
 #' South Atlantic
 #'
-#' example data set of a transform fualt crossing the South Atlantic ridge
+#' @description example data set of a transform fault crossing the South Atlantic ridge
 #'
 #' @docType data
 #'
