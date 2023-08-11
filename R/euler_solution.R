@@ -288,7 +288,7 @@ deviation_stats <- function(x) {
 #' @inheritParams to_geomat
 #' @param sm logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
-#' @param sigdig integer rounds the values in its first argument to the specified number of decimal places (default 2)
+#' @param sigdig integer. Number of digits to show coordinates and apical half angle (default 4)
 #' @param omerc logical. Whether the plot should be shown in the oblique
 #' Mercator projection with the Euler pole at North (`TRUE`) or not (`FALSE`, the default).
 #' @param expand two element vector expand the map limits in latitude and longitude (`c(1, 1)` (degrees) by default)
@@ -305,7 +305,7 @@ deviation_stats <- function(x) {
 #' quick_plot(south_atlantic, sm = FALSE)
 #' quick_plot(south_atlantic, sm = TRUE)
 #' quick_plot(south_atlantic, sm = TRUE, omerc = TRUE)
-quick_plot <- function(x, sm = TRUE, sigdig = 2, omerc = FALSE, expand = c(1, 1)) {
+quick_plot <- function(x, sm = TRUE, sigdig = 4, omerc = FALSE, expand = c(1, 1)) {
   res <- euler_solution(x, sm)
   deviation <- data_deviation(x, res)
 
@@ -339,22 +339,22 @@ quick_plot <- function(x, sm = TRUE, sigdig = 2, omerc = FALSE, expand = c(1, 1)
       title = "Best fit Euler pole and cone",
       subtitle = paste0(
         "Pole: ",
-        round(res[1], sigdig),
+        signif(res[1], digits = sigdig),
         "\u00b0 (lat), ",
-        round(res[2], sigdig),
+        signif(res[2], digits = sigdig),
         "\u00b0 (lon) | Apical half angle of cone: ",
-        round(res[3], sigdig),
+        signif(res[3], digits = sigdig),
         "°"
       ),
       caption = paste0(
-        "Misfit: ", round(res[4], 3),
-        " | Dispersion of deviation from 0\u00b0: ", round(stats$disp, 3),
+        "Misfit: ", signif(res[4], digits = 1),
+        " | Dispersion of deviation from 0\u00b0: ", signif(stats$disp, digits = 1),
         " | Mean deviation: ",
-        round(stats$mean, 2), "\u00b0 \u00b1 ",
-        round(stats$sd, 2),
+        signif(stats$mean, digits = 1), "\u00b0 \u00b1 ",
+        signif(stats$sd, digits = 2),
         "\u00b0 (sd.) | Rayleigh test: ",
-        round(stats$Rayleigh.test, 3),
-        " (p: ", round(stats$p.value, 3), ")"
+        signif(stats$Rayleigh.test, digits = 3),
+        " (p: ", signif(stats$p.value, digits = 2), ")"
       )
     )
 }

@@ -4,7 +4,7 @@
 \alias{quick_plot}
 \title{Plot the Euler pole solution}
 \usage{
-quick_plot(x, sm = TRUE, sigdig = 2, omerc = FALSE, expand = c(1, 1))
+quick_plot(x, sm = TRUE, sigdig = 4, omerc = FALSE, expand = c(1, 1))
 }
 \arguments{
 \item{x}{a \code{matrix} or \code{data.frame} containing the geographical coordinates,
@@ -13,7 +13,7 @@ or a \code{sf} object}
 \item{sm}{logical. Whether the structure described by the points \code{x} is
 expected to follow small (\code{TRUE}) or great circle (\code{FALSE}) arcs?}
 
-\item{sigdig}{integer rounds the values in its first argument to the specified number of decimal places (default 2)}
+\item{sigdig}{integer. Number of digits to show coordinates and apical half angle (default 4)}
 
 \item{omerc}{logical. Whether the plot should be shown in the oblique
 Mercator projection with the Euler pole at North (\code{TRUE}) or not (\code{FALSE}, the default).}
