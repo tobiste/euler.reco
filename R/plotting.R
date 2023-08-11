@@ -6,7 +6,6 @@
 #' @inheritParams to_geomat
 #' @param sm logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
-#' @param sigdig integer. Number of digits to show coordinates and apical half angle (`4` by default).
 #' @param proj character. Whether the plot should be shown in the geographic Mercator projection (`"geo"`, the default), the oblique
 #' Mercator projection with the Euler pole at North (`"omerc"`), or the stereographic projection centered in the Euler pole (`"stereo"`).
 #' @param expand numeric two element vector.  expand the map limits in latitude and longitude (`c(1, 1)` (degrees) by default)
@@ -29,7 +28,7 @@
 #' data(south_atlantic)
 #' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "omerc")
 #' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "stereo")
-quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., sigdig = 4, proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
+quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
   proj <- match.arg(proj)
 
   if (densify.x) {
@@ -84,12 +83,12 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., sigdig = 4, proj = 
     ggplot2::labs(
       title = "Best fit Euler pole and cone",
       subtitle = paste0(
-        "Pole: ",
-        signif(res[1], digits = sigdig),
-        "\u00B0 lat., ",
-        signif(res[2], digits = sigdig),
-        "\u00B0 lon. | Apical half angle of cone: ",
-        signif(res[3], digits = sigdig),
+        "Lat./Lon.: ",
+        round(res[1], digits = 1),
+        "\u00B0 / ",
+        round(res[2], digits = 1),
+        "\u00B0 | Apical half angle of cone: ",
+        round(res[3], digits = 1),
         "\u00B0"
       ),
       caption = paste0(

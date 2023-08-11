@@ -9,7 +9,6 @@ quick_plot(
   sm = TRUE,
   densify.x = FALSE,
   ...,
-  sigdig = 4,
   proj = c("geo", "omerc", "stereo"),
   expand = c(1, 1)
 )
@@ -22,8 +21,6 @@ or a \code{sf} object.}
 expected to follow small (\code{TRUE}) or great circle (\code{FALSE}) arcs?}
 
 \item{...}{optional arguments passed to \code{\link[smoothr:densify]{smoothr::densify()}} (only if \code{densify.x = TRUE}).}
-
-\item{sigdig}{integer. Number of digits to show coordinates and apical half angle (\code{4} by default).}
 
 \item{proj}{character. Whether the plot should be shown in the geographic Mercator projection (\code{"geo"}, the default), the oblique
 Mercator projection with the Euler pole at North (\code{"omerc"}), or the stereographic projection centered in the Euler pole (\code{"stereo"}).}
