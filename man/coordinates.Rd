@@ -4,17 +4,11 @@
 \alias{coordinates}
 \alias{geographical_to_cartesian2}
 \alias{cartesian_to_geographical2}
-\alias{geographical_to_acoscartesian}
-\alias{acoscartesian_to_geographical}
 \title{Coordinate conversion}
 \usage{
 geographical_to_cartesian2(x)
 
 cartesian_to_geographical2(x)
-
-geographical_to_acoscartesian(x)
-
-acoscartesian_to_geographical(x)
 }
 \arguments{
 \item{x}{\code{matrix}}

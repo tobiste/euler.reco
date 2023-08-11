@@ -101,7 +101,6 @@ euler_solution <- function(x, sm = TRUE, densify = FALSE, ...) {
   }
 }
 
-
 #' Position statistics
 #'
 #' Statistics on the distribution of geographic locations
@@ -119,8 +118,6 @@ geo_distribution <- function(x) {
     tectonicr::rad2deg()
   c(lat = xmean[1], lon = xmean[2], delta = xsd)
 }
-
-
 
 #' Convert object to geographic coordinate matrix
 #'
@@ -144,8 +141,6 @@ to_geomat <- function(x) {
     x
   }
 }
-
-
 
 #' Create a specified small circle around a given pole
 #'
@@ -185,19 +180,6 @@ smallcircle <- function(lat, lon, angle = 90, n = 1000L) {
       quiet = TRUE
     )
 }
-
-
-# library(ggplot2)
-#
-# rmt.res <- euler_solution(rmt_mat)
-# ep <- data.frame(lat = rmt.res[1], lon = rmt.res[2])
-#
-# ggplot()+
-#   geom_sf(data = rmt_sf) +
-#   geom_sf(data = tectonicr::eulerpole_smallcircles(ep, 50)) +
-#   coord_sf(xlim = c(sf::st_bbox(rmt)[1], sf::st_bbox(rmt)[3]), ylim = c(sf::st_bbox(rmt)[2], sf::st_bbox(rmt)[4]))
-
-
 
 #' Deviation of input data from Euler pole solution
 #'
@@ -280,7 +262,6 @@ deviation_stats <- function(x) {
   )
 }
 
-
 #' Plot the Euler pole solution
 #'
 #' @inheritParams to_geomat
@@ -332,31 +313,30 @@ quick_plot <- function(x, sm = TRUE, sigdig = 4, omerc = FALSE, expand = c(1, 1)
     ggplot2::geom_sf(data = x) +
     ggplot2::geom_sf(data = x2, aes(color = abs(deviation))) +
     ggplot2::coord_sf(xlim = c(box[1] - expand[2], box[3] + expand[2]), ylim = c(box[2] - expand[1], box[4] + expand[1])) +
-    ggplot2::scale_color_viridis_c("|Deviation| (°)") +
+    ggplot2::scale_color_viridis_c("|Deviation| (u00B0)") +
     ggplot2::labs(
       title = "Best fit Euler pole and cone",
       subtitle = paste0(
         "Pole: ",
         signif(res[1], digits = sigdig),
-        "\u00b0 (lat), ",
+        "\u00B0 (lat), ",
         signif(res[2], digits = sigdig),
-        "\u00b0 (lon) | Apical half angle of cone: ",
+        "\u00B0 (lon) | Apical half angle of cone: ",
         signif(res[3], digits = sigdig),
         "°"
       ),
       caption = paste0(
         "Misfit: ", signif(res[4], digits = 1),
-        " | Dispersion of deviation from 0\u00b0: ", signif(stats$disp, digits = 1),
+        " | Dispersion of deviation from 0\u00B0: ", signif(stats$disp, digits = 1),
         " | Mean deviation: ",
-        signif(stats$mean, digits = 1), "\u00b0 \u00b1 ",
+        signif(stats$mean, digits = 1), "\u00B0 \u00B1 ",
         signif(stats$sd, digits = 2),
-        "\u00b0 (sd.) | Rayleigh test: ",
+        "\u00B0 (sd.) | Rayleigh test: ",
         signif(stats$Rayleigh.test, digits = 3),
         " (p: ", signif(stats$p.value, digits = 2), ")"
       )
     )
 }
-
 
 #' Coordinate conversion
 #'
@@ -385,16 +365,17 @@ cartesian_to_geographical2 <- function(x) {
   tectonicr::rad2deg(cbind(lat, lon))
 }
 
-#' @rdname coordinates
-geographical_to_acoscartesian <- function(x) {
-  structr:::cartesian_to_acoscartesian(
-    geographical_to_cartesian2(x)
-  )
-}
-
-#' @rdname coordinates
-acoscartesian_to_geographical <- function(x) {
-  cartesian_to_geographical2(
-    structr:::acoscartesian_to_cartesian(x)
-  )
-}
+#' #' @rdname coordinates
+#' geographical_to_acoscartesian <- function(x) {
+#'   structr:::cartesian_to_acoscartesian(
+#'     geographical_to_cartesian2(x)
+#'   )
+#' }
+#'
+#' #' @rdname coordinates
+#' acoscartesian_to_geographical <- function(x) {
+#'   cartesian_to_geographical2(
+#'     structr:::acoscartesian_to_cartesian(x)
+#'   )
+#' }
+#'
