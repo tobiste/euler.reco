@@ -6,7 +6,7 @@ ep_from_sc <- function(x) {
     cartesian_to_geographical2()
   names(coords) <- c("lat", "lon")
   angle <- res$cone_angle * 180 / pi
-  if(angle > 90) angle = 180 - angle
+  if (angle > 90) angle <- 180 - angle
   misfit <- res$r_s
   names(angle) <- "angle"
   names(misfit) <- "misfit"
@@ -93,8 +93,6 @@ euler_solution <- function(x, sm = TRUE, densify = FALSE, ...) {
   } else {
     x_coords <- to_geomat(x)
   }
-
-
 
   if (sm) {
     ep_from_sc(x_coords)
@@ -235,11 +233,11 @@ data_deviation <- function(x, ep, sm = TRUE) {
 
 ep_pts_distance <- function(x, y, z, ep) {
   d <- tectonicr::angle_vectors(c(x, y, z), ep)
-  if(d > 90) {
-    180-d
+  if (d > 90) {
+    180 - d
   } else {
-      d
-    }
+    d
+  }
 }
 
 #' Distribution of deviation angles
@@ -264,22 +262,22 @@ ep_pts_distance <- function(x, y, z, ep) {
 #' m <- data_deviation(tintina, res)
 #' deviation_stats(m)
 deviation_stats <- function(x) {
-  #x <- tectonicr::deviation_norm(x)
+  # x <- tectonicr::deviation_norm(x)
   mean_dev <- tectonicr::circular_mean(x)
   if (mean_dev > 90) {
     mean_dev <- 180 - mean_dev
   }
-  R = tectonicr::rayleigh_test(x, mu = 0)
+  R <- tectonicr::rayleigh_test(x, mu = 0)
 
   data.frame(
     mean = mean_dev,
-    sd =  tectonicr::circular_sd(x),
+    sd = tectonicr::circular_sd(x),
     var = tectonicr::circular_var(x),
     disp = tectonicr::circular_dispersion(x, 0),
     CI95 = tectonicr::confidence_angle(x),
     min = min(abs(x)), max = max(abs(x)),
     Rayleigh.test = R$statistic, p.value = R$p.value
-    )
+  )
 }
 
 
@@ -311,19 +309,19 @@ quick_plot <- function(x, sm = TRUE, sigdig = 4, omerc = FALSE, expand = c(1, 1)
 
   pts <- to_geomat(x)
   suppressWarnings(
-  x2 <- sf::st_cast(x, "POINT") |>
-    dplyr::mutate(deviation = deviation)
+    x2 <- sf::st_cast(x, "POINT") |>
+      dplyr::mutate(deviation = deviation)
   )
 
   circle <- smallcircle(res[1], res[2], res[3])
   suppressMessages(
-  stats <- deviation_stats(x2$deviation)
+    stats <- deviation_stats(x2$deviation)
   )
 
-  if(omerc){
+  if (omerc) {
     ep <- tectonicr::euler_pole(res[1], res[2])
     x <- tectonicr::geographical_to_PoR_sf(x, ep)
-    x2 <-  tectonicr::geographical_to_PoR_sf(x2, ep)
+    x2 <- tectonicr::geographical_to_PoR_sf(x2, ep)
     circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
   }
 
@@ -333,7 +331,7 @@ quick_plot <- function(x, sm = TRUE, sigdig = 4, omerc = FALSE, expand = c(1, 1)
     ggplot2::geom_sf(data = circle, lty = 2, color = "darkgrey") +
     ggplot2::geom_sf(data = x) +
     ggplot2::geom_sf(data = x2, aes(color = abs(deviation))) +
-    ggplot2::coord_sf(xlim = c(box[1] -expand[2], box[3] + expand[2]), ylim = c(box[2]-expand[1], box[4]+expand[1])) +
+    ggplot2::coord_sf(xlim = c(box[1] - expand[2], box[3] + expand[2]), ylim = c(box[2] - expand[1], box[4] + expand[1])) +
     ggplot2::scale_color_viridis_c("|Deviation| (°)") +
     ggplot2::labs(
       title = "Best fit Euler pole and cone",
@@ -375,7 +373,7 @@ geographical_to_cartesian2 <- function(x) {
   cx <- cos(x[, 1]) * cos(x[, 2])
   cy <- cos(x[, 1]) * sin(x[, 2])
   cz <- sin(x[, 1])
-  cbind(x=cx, y=cy, z=cz)
+  cbind(x = cx, y = cy, z = cz)
 }
 
 #' @rdname coordinates
