@@ -53,6 +53,6 @@ quick_plot(tintina)
 ```
 
 The Mercator projection can also be transformed into a oblique Mercator projection where the approximated Euler pole will be at the top of the map. In such a coordinate system small and great circles are horizontal and vertical lines, respectively. In our example, the structure is a strike-slip fault, i.e. small circle structure. Thus we expect, the structure to be nearly horizontal in the reprojection:
-```{r plot2}
-quick_plot(tintina, omerc = TRUE)
+```{r plot_omerc}
+quick_plot(tintina, proj = "omerc")
 ```

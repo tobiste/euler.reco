@@ -4,7 +4,15 @@
 \alias{quick_plot}
 \title{Plot the Euler pole solution}
 \usage{
-quick_plot(x, sm = TRUE, sigdig = 4, omerc = FALSE, expand = c(1, 1))
+quick_plot(
+  x,
+  sm = TRUE,
+  densify.x = FALSE,
+  ...,
+  sigdig = 4,
+  proj = c("geo", "omerc", "stereo"),
+  expand = c(1, 1)
+)
 }
 \arguments{
 \item{x}{either a \code{matrix} or \code{data.frame} containing the geographical coordinates,
@@ -13,10 +21,12 @@ or a \code{sf} object.}
 \item{sm}{logical. Whether the structure described by the points \code{x} is
 expected to follow small (\code{TRUE}) or great circle (\code{FALSE}) arcs?}
 
-\item{sigdig}{integer. Number of digits to show coordinates and apical half angle (default 4)}
+\item{...}{optional arguments passed to \code{\link[smoothr:densify]{smoothr::densify()}} (only if \code{densify.x = TRUE}).}
 
-\item{omerc}{logical. Whether the plot should be shown in the oblique
-Mercator projection with the Euler pole at North (\code{TRUE}) or not (\code{FALSE}, the default).}
+\item{sigdig}{integer. Number of digits to show coordinates and apical half angle (\code{4} by default).}
+
+\item{proj}{character. Whether the plot should be shown in the geographic Mercator projection (\code{"geo"}, the default), the oblique
+Mercator projection with the Euler pole at North (\code{"omerc"}), or the stereographic projection centered in the Euler pole (\code{"stereo"}).}
 
 \item{expand}{numeric two element vector.  expand the map limits in latitude and longitude (\code{c(1, 1)} (degrees) by default)}
 }
@@ -30,10 +40,9 @@ the data's misfit to the solution and some statistics of the solution.
 \examples{
 data(tintina)
 quick_plot(tintina)
-quick_plot(tintina, omerc = TRUE)
+quick_plot(tintina, densify.x = TRUE, proj = "omerc")
 
 data(south_atlantic)
-quick_plot(south_atlantic, sm = FALSE)
-quick_plot(south_atlantic, sm = TRUE)
-quick_plot(south_atlantic, sm = TRUE, omerc = TRUE)
+quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "omerc")
+quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "stereo")
 }

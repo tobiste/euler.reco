@@ -116,3 +116,31 @@ smallcircle <- function(lat, lon, angle = 90, n = 1000L) {
       quiet = TRUE
     )
 }
+
+
+#' Stereographic projection centered in Euler pole
+#'
+#' @param x two-element vector or data.frame specifying the latitude and longitude of the projections center.
+#'
+#' @return `sf::crs()` object
+#'
+#' @importFrom sf st_crs
+#' @importFrom tectonicr longitude_modulo
+#'
+#' @export
+#'
+#' @examples
+#' ep_stereo_crs(c(45, 10))
+ep_stereo_crs <- function (x){
+  if(is.numeric(x) | is.matrix(x)){
+    x <- data.frame(lat = x[1], lon = x[2])
+  }
+
+  stopifnot(is.data.frame(x))
+  if (x$lat < 0) {
+    x$lat <- -x$lat
+    x$lon <- tectonicr::longitude_modulo(x$lon + 180)
+  }
+
+  sf::st_crs(paste0("+proj=stere +lat_0=",  x$lat, " +lat_0=", x$lon))
+}

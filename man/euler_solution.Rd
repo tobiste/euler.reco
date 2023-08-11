@@ -4,7 +4,7 @@
 \alias{euler_solution}
 \title{Euler pole solution for geological structures}
 \usage{
-euler_solution(x, sm = TRUE, densify = FALSE, ...)
+euler_solution(x, sm = TRUE, densify.x = FALSE, ...)
 }
 \arguments{
 \item{x}{either a \code{matrix} or \code{data.frame} containing the geographical coordinates,
@@ -13,12 +13,12 @@ or a \code{sf} object.}
 \item{sm}{logical. Whether the structure described by the points \code{x} is
 expected to follow small (\code{TRUE}) or great circle (\code{FALSE}) arcs?}
 
-\item{densify}{logical. Whether the points \code{x} along the lines structure
+\item{densify.x}{logical. Whether the points \code{x} along the lines structure
 should be densified before analysis (\code{TRUE}) or not (\code{FALSE}, the default).
 Densification would yield equally spaced points along the line.}
 
 \item{...}{optional arguments passed to \code{\link[smoothr:densify]{smoothr::densify()}}
-(only if \code{densify = TRUE}).}
+(only if \code{densify.x = TRUE}).}
 }
 \value{
 numeric vector given the latitude (in degrees), longitude (in degrees), the misfit (0 - low, 1 - high),
@@ -52,9 +52,9 @@ euler_solution(rmt_sf)
 
 data(tintina)
 euler_solution(tintina)
-euler_solution(tintina, densify = TRUE)
+euler_solution(tintina, densify.x = TRUE)
 
 data(south_atlantic)
 euler_solution(south_atlantic, sm = TRUE)
-euler_solution(south_atlantic, densify = TRUE, sm = TRUE)
+euler_solution(south_atlantic, densify.x = TRUE, sm = TRUE)
 }

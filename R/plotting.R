@@ -6,10 +6,11 @@
 #' @inheritParams to_geomat
 #' @param sm logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
-#' @param sigdig integer. Number of digits to show coordinates and apical half angle (default 4)
-#' @param omerc logical. Whether the plot should be shown in the oblique
-#' Mercator projection with the Euler pole at North (`TRUE`) or not (`FALSE`, the default).
+#' @param sigdig integer. Number of digits to show coordinates and apical half angle (`4` by default).
+#' @param proj character. Whether the plot should be shown in the geographic Mercator projection (`"geo"`, the default), the oblique
+#' Mercator projection with the Euler pole at North (`"omerc"`), or the stereographic projection centered in the Euler pole (`"stereo"`).
 #' @param expand numeric two element vector.  expand the map limits in latitude and longitude (`c(1, 1)` (degrees) by default)
+#' @param ... optional arguments passed to [smoothr::densify()] (only if `densify.x = TRUE`).
 #'
 #' @returns ggplot
 #'
@@ -23,17 +24,33 @@
 #' @examples
 #' data(tintina)
 #' quick_plot(tintina)
-#' quick_plot(tintina, omerc = TRUE)
+#' quick_plot(tintina, densify.x = TRUE, proj = "omerc")
 #'
 #' data(south_atlantic)
-#' quick_plot(south_atlantic, sm = FALSE)
-#' quick_plot(south_atlantic, sm = TRUE)
-#' quick_plot(south_atlantic, sm = TRUE, omerc = TRUE)
-quick_plot <- function(x, sm = TRUE, sigdig = 4, omerc = FALSE, expand = c(1, 1)) {
+#' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "omerc")
+#' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "stereo")
+quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., sigdig = 4, proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
+  proj <- match.arg(proj)
+
+  if (densify.x) {
+    is.sf <- inherits(x, "sf")
+    is.df <- is.data.frame(x)
+    is.mat <- is.matrix(x)
+    stopifnot(any(is.sf, is.df, is.mat))
+    if (!is.sf) {
+      if (!is.df) {
+        x <- as.data.frame(x)
+        colnames(x) <- c("lat", "lon")
+      } else {
+        x <- sf::st_as_sf(x, coords = c("lon", "lat"), crs = "WGS84")
+      }
+    }
+    x <- smoothr::densify(x, ...)
+  }
+
   res <- euler_solution(x, sm)
   deviation <- data_deviation(x, res)
 
-  # pts <- to_geomat(x)
   suppressWarnings(
     x2 <- sf::st_cast(x, "POINT") |>
       dplyr::mutate(deviation = deviation)
@@ -44,11 +61,16 @@ quick_plot <- function(x, sm = TRUE, sigdig = 4, omerc = FALSE, expand = c(1, 1)
     stats <- deviation_stats(x2$deviation)
   )
 
-  if (omerc) {
-    ep <- tectonicr::euler_pole(res[1], res[2])
+  ep <- tectonicr::euler_pole(res[1], res[2])
+  if (proj == "omerc") {
     x <- tectonicr::geographical_to_PoR_sf(x, ep)
     x2 <- tectonicr::geographical_to_PoR_sf(x2, ep)
     circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
+  } else if(proj == "stereo") {
+    crs2 <- ep_stereo_crs(ep)
+    x <- sf::st_transform(x, crs2)
+    x2 <- sf::st_transform(x2, crs2)
+    circle <- sf::st_transform(circle, crs2)
   }
 
   box <- sf::st_bbox(x)
@@ -64,11 +86,11 @@ quick_plot <- function(x, sm = TRUE, sigdig = 4, omerc = FALSE, expand = c(1, 1)
       subtitle = paste0(
         "Pole: ",
         signif(res[1], digits = sigdig),
-        "\u00B0 (lat), ",
+        "\u00B0 lat., ",
         signif(res[2], digits = sigdig),
-        "\u00B0 (lon) | Apical half angle of cone: ",
+        "\u00B0 lon. | Apical half angle of cone: ",
         signif(res[3], digits = sigdig),
-        "\u00B"
+        "\u00B0"
       ),
       caption = paste0(
         "Misfit: ", signif(res[4], digits = 1),

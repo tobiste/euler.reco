@@ -32,6 +32,7 @@ library('euler.reco')
 ```
 
 ## Documentation
+
 A brief documentation and application are presented in the vignette file.
 
 ```
@@ -43,6 +44,9 @@ Tobias Stephan
 
 ## How to cite
 ...
+
+## License
+MIT License
 
 ## References
 - <div class="csl-entry">Ramsay, J. G. (1967). <i>Folding and fracturing of rocks. McGraw-Hill Book Company</i>, New York</div>

@@ -35,12 +35,12 @@ ep_from_gc <- function(x) {
 #' @param sm logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
 #'
-#' @param densify logical. Whether the points `x` along the lines structure
+#' @param densify.x logical. Whether the points `x` along the lines structure
 #' should be densified before analysis (`TRUE`) or not (`FALSE`, the default).
 #'  Densification would yield equally spaced points along the line.
 #'
 #' @param ... optional arguments passed to [smoothr::densify()]
-#'  (only if `densify = TRUE`).
+#'  (only if `densify.x = TRUE`).
 #'
 #' @importFrom sf st_coordinates st_as_sf
 #' @importFrom smoothr densify
@@ -74,13 +74,13 @@ ep_from_gc <- function(x) {
 #'
 #' data(tintina)
 #' euler_solution(tintina)
-#' euler_solution(tintina, densify = TRUE)
+#' euler_solution(tintina, densify.x = TRUE)
 #'
 #' data(south_atlantic)
 #' euler_solution(south_atlantic, sm = TRUE)
-#' euler_solution(south_atlantic, densify = TRUE, sm = TRUE)
-euler_solution <- function(x, sm = TRUE, densify = FALSE, ...) {
-  if (densify) {
+#' euler_solution(south_atlantic, densify.x = TRUE, sm = TRUE)
+euler_solution <- function(x, sm = TRUE, densify.x = FALSE, ...) {
+  if (densify.x) {
     is.sf <- inherits(x, "sf")
     is.df <- is.data.frame(x)
     is.mat <- is.matrix(x)
