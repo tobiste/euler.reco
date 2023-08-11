@@ -10,7 +10,7 @@ quick_plot(
   densify.x = FALSE,
   ...,
   proj = c("geo", "omerc", "stereo"),
-  expand = c(1, 1)
+  expand = c(0, 0)
 )
 }
 \arguments{
@@ -20,15 +20,16 @@ or a \code{sf} object.}
 \item{sm}{logical. Whether the structure described by the points \code{x} is
 expected to follow small (\code{TRUE}) or great circle (\code{FALSE}) arcs?}
 
+\item{densify.x}{logical. Whether the points \code{x} along the lines structure
+should be densified before analysis (\code{TRUE}) or not (\code{FALSE}, the default).
+Densification would yield equally spaced points along the line.}
+
 \item{...}{optional arguments passed to \code{\link[smoothr:densify]{smoothr::densify()}} (only if \code{densify.x = TRUE}).}
 
 \item{proj}{character. Whether the plot should be shown in the geographic Mercator projection (\code{"geo"}, the default), the oblique
 Mercator projection with the Euler pole at North (\code{"omerc"}), or the stereographic projection centered in the Euler pole (\code{"stereo"}).}
 
-\item{expand}{numeric two element vector.  expand the map limits in latitude and longitude (\code{c(1, 1)} (degrees) by default)}
-}
-\value{
-ggplot
+\item{expand}{numeric two element vector.  expand the map limits in latitude and longitude (\code{c(0, 0)} (degrees) by default)}
 }
 \description{
 Creates a simple ggplot to show the best fit small/great circle,
@@ -37,7 +38,7 @@ the data's misfit to the solution and some statistics of the solution.
 \examples{
 data(tintina)
 quick_plot(tintina)
-quick_plot(tintina, densify.x = TRUE, proj = "omerc")
+quick_plot(tintina, sm = TRUE, densify.x = TRUE, proj = "omerc")
 
 data(south_atlantic)
 quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "omerc")

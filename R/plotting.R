@@ -6,29 +6,30 @@
 #' @inheritParams to_geomat
 #' @param sm logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
+#' @param densify.x logical. Whether the points `x` along the lines structure
+#' should be densified before analysis (`TRUE`) or not (`FALSE`, the default).
+#' Densification would yield equally spaced points along the line.
 #' @param proj character. Whether the plot should be shown in the geographic Mercator projection (`"geo"`, the default), the oblique
 #' Mercator projection with the Euler pole at North (`"omerc"`), or the stereographic projection centered in the Euler pole (`"stereo"`).
-#' @param expand numeric two element vector.  expand the map limits in latitude and longitude (`c(1, 1)` (degrees) by default)
+#' @param expand numeric two element vector.  expand the map limits in latitude and longitude (`c(0, 0)` (degrees) by default)
 #' @param ... optional arguments passed to [smoothr::densify()] (only if `densify.x = TRUE`).
 #'
-#' @returns ggplot
-#'
-#' @importFrom ggplot2 ggplot geom_sf scale_color_viridis_c labs aes
-#' @importFrom sf st_cast st_bbox
+#' @importFrom sf st_cast st_bbox st_geometry sf.colors
 #' @importFrom dplyr mutate
 #' @importFrom tectonicr euler_pole geographical_to_PoR_sf
+#' @importFrom graphics lcm legend
 #'
 #' @export
 #'
 #' @examples
 #' data(tintina)
 #' quick_plot(tintina)
-#' quick_plot(tintina, densify.x = TRUE, proj = "omerc")
+#' quick_plot(tintina, sm = TRUE, densify.x = TRUE, proj = "omerc")
 #'
 #' data(south_atlantic)
 #' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "omerc")
 #' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "stereo")
-quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
+quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(0, 0)) {
   proj <- match.arg(proj)
 
   if (densify.x) {
@@ -52,7 +53,7 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
 
   suppressWarnings(
     x2 <- sf::st_cast(x, "POINT") |>
-      dplyr::mutate(deviation = deviation)
+      dplyr::mutate(deviation = deviation, abs_deviation = abs(deviation))
   )
 
   circle <- smallcircle(res[1], res[2], res[3])
@@ -72,34 +73,31 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
     circle <- sf::st_transform(circle, crs2)
   }
 
-  box <- sf::st_bbox(x)
+  box <- sf::st_bbox(x) + c(-expand[2], expand[2], -expand[1], expand[1])
+  breaks <- pretty(x2$abs_deviation, n = 5)
+  p.value <- ifelse(stats$p.value < 0.001, "<0.001", signif(stats$p.value, digits = 2))
 
-  ggplot2::ggplot() +
-    ggplot2::geom_sf(data = circle, lty = 2, color = "darkgrey") +
-    ggplot2::geom_sf(data = x) +
-    ggplot2::geom_sf(data = x2, ggplot2::aes(color = abs(deviation))) +
-    ggplot2::coord_sf(xlim = c(box[1] - expand[2], box[3] + expand[2]), ylim = c(box[2] - expand[1], box[4] + expand[1])) +
-    ggplot2::scale_color_viridis_c("|Deviation| (\u00B0)") +
-    ggplot2::labs(
-      title = "Best fit Euler pole and cone",
-      subtitle = paste0(
-        "Lat./Lon.: ",
-        round(res[1], digits = 1),
-        "\u00B0 / ",
-        round(res[2], digits = 1),
-        "\u00B0 | Apical half angle of cone: ",
-        round(res[3], digits = 1),
-        "\u00B0"
-      ),
-      caption = paste0(
-        "Misfit: ", signif(res[4], digits = 1),
-        " | Dispersion of deviation from 0\u00B0: ", signif(stats$disp, digits = 1),
-        " | Mean deviation: ",
-        signif(stats$mean, digits = 1), "\u00B0 \u00B1 ",
-        signif(stats$sd, digits = 2),
-        "\u00B0 (sd.) | Rayleigh test: ",
-        signif(stats$Rayleigh.test, digits = 3),
-        " (p: ", signif(stats$p.value, digits = 2), ")"
-      )
-    )
+  title = paste0(
+    "Best fit Euler pole and cone's apical half angle\n",
+    "(Lat./Lon.: ",
+    round(res[1], digits = 1),
+    "\u00B0 / ",
+    round(res[2], digits = 1),
+    "\u00B0 | angle: ",
+    round(res[3], digits = 1),
+    "\u00B0)"
+  )
+  sub = paste0(
+    "Misfit: ", signif(res[4], digits = 1),
+    " | Dispersion of deviation from 0\u00B0: ", signif(stats$disp, digits = 1),
+    "\nMean deviation [95% CI]: ",
+    signif(stats$mean, digits = 1), "\u00B0 [",
+    signif(stats$mean-stats$CI95, digits = 2),
+    "\u00B0, ", signif(stats$mean+stats$CI95, digits = 2), "\u00B0] | P value: ", p.value
+  )
+
+  plot(sf::st_geometry(x), extent = box, graticule = TRUE, axes = TRUE, main = title, sub = sub)
+  plot(sf::st_geometry(circle), lty = 2, col = "seagreen", lwd = 1.5, reset = T, extent = box, add = TRUE)
+  plot(x2['abs_deviation'], fill = sf::sf.colors(length(breaks)), key.pos = 1, key.size = lcm(1.3), extent = box,  add = TRUE)
+  legend("topright", legend = breaks, fill = sf::sf.colors(length(breaks)), title = "|Deviation| (\u00B0)")
 }
