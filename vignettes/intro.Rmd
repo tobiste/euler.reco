@@ -29,7 +29,7 @@ library(euler.reco)
 
 The data used for the approximation can be geological structure. Either you have the geographic coordinates of the the structures vertices (as a matrix or data.frame), or you import the structure as a shape file (or other spatial file formats) via `sf::read_sf()`. The example dataset, i.e. the trace of *Tintina Fault* and the *Rocky Mountain Trench* in the Canadian Cordillera, is giving as a `sf` object.
 ```{r data}
-data('tintina')
+data("tintina")
 tintina
 ```
 ## Find and evaluate the best-fitting small or circle for the geological structure
@@ -45,7 +45,7 @@ Furthermore, it returns a misfit value, i.e. the residual of the least squares o
 A good approximation of the structure by the small circle should have a low deviation of the structure from the small circle (`data_deviation()`). The distributions of the deviations can be evaluated by:
 
 ```{r solution_stats, message=FALSE}
-  data_deviation(tintina, res) |>
+data_deviation(tintina, res) |>
   deviation_stats()
 ```
 In our example, the dispersion of the deviation angles from zero deviation (perfect fit) is very low. The zero deviation is within the 95% confidence interval as indicated by by the mean $\pm$ the confidence angle. A Rayleigh test is also performed, here with the alternative hypothesis that the data is (circularly) normally distributed around 0. The null hypothesis is rejected and the alternative can be accepted. 

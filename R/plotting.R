@@ -65,8 +65,8 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
   if (proj == "omerc") {
     x <- tectonicr::geographical_to_PoR_sf(x, ep)
     x2 <- tectonicr::geographical_to_PoR_sf(x2, ep)
-    #circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
-  } else if(proj == "stereo") {
+    # circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
+  } else if (proj == "stereo") {
     crs2 <- ep_stereo_crs(ep)
     x <- sf::st_transform(x, crs2)
     x2 <- sf::st_transform(x2, crs2)
@@ -78,7 +78,7 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
   p.value <- ifelse(stats$p.value < 0.001, "<0.001", signif(stats$p.value, digits = 2))
 
 
-  title = paste0(
+  title <- paste0(
     "Best fit Euler pole and cone's apical half angle\n",
     "(Lat./Lon.: ",
     round(res[1], digits = 1),
@@ -88,21 +88,21 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
     round(res[3], digits = 1),
     "\u00B0)"
   )
-  sub = paste0(
+  sub <- paste0(
     "Misfit: ", signif(res[4], digits = 1),
     " | Dispersion of deviation from 0\u00B0: ", signif(stats$disp, digits = 1),
     "\nMean deviation [95% CI]: ",
     signif(stats$mean, digits = 1), "\u00B0 [",
-    signif(stats$mean-stats$CI95, digits = 2),
-    "\u00B0, ", signif(stats$mean+stats$CI95, digits = 2), "\u00B0] | P value: ", p.value
+    signif(stats$mean - stats$CI95, digits = 2),
+    "\u00B0, ", signif(stats$mean + stats$CI95, digits = 2), "\u00B0] | P value: ", p.value
   )
 
   plot(sf::st_geometry(x), extent = box, graticule = TRUE, axes = TRUE, main = title, sub = sub)
-  if(proj == "omerc"){
-    abline(h = 90-res['angle'],  lty = 2, col = "seagreen", lwd = 1.5)
-    } else {
+  if (proj == "omerc") {
+    abline(h = 90 - res["angle"], lty = 2, col = "seagreen", lwd = 1.5)
+  } else {
     plot(sf::st_geometry(circle), lty = 2, col = "seagreen", lwd = 1.5, reset = T, extent = box, add = TRUE)
   }
-  plot(x2['abs_deviation'], fill = sf::sf.colors(length(breaks)), key.pos = 1, key.size = lcm(1.3), extent = box,  add = TRUE)
+  plot(x2["abs_deviation"], fill = sf::sf.colors(length(breaks)), key.pos = 1, key.size = lcm(1.3), extent = box, add = TRUE)
   legend("topright", legend = breaks, fill = sf::sf.colors(length(breaks)), title = "|Deviation| (\u00B0)")
 }

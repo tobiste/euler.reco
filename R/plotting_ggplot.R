@@ -35,7 +35,7 @@ quick_plot_g <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "
     x <- tectonicr::geographical_to_PoR_sf(x, ep)
     x2 <- tectonicr::geographical_to_PoR_sf(x2, ep)
     circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
-  } else if(proj == "stereo") {
+  } else if (proj == "stereo") {
     crs2 <- ep_stereo_crs(ep)
     x <- sf::st_transform(x, crs2)
     x2 <- sf::st_transform(x2, crs2)
