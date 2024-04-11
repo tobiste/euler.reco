@@ -17,7 +17,7 @@
 #' @importFrom sf st_cast st_bbox st_geometry sf.colors
 #' @importFrom dplyr mutate
 #' @importFrom tectonicr euler_pole geographical_to_PoR_sf
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot aes geom_hline geom_sf coord_sf scale_color_viridis_c labs
 #'
 #' @export
 #'
@@ -30,7 +30,7 @@
 #' quick_plot_gg(south_atlantic)
 #' quick_plot_gg(south_atlantic, proj = "omerc")
 #' quick_plot_gg(south_atlantic, proj = "stereo")
-quick_plot_gg <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
+quick_plot_gg <- function(x, sc = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
   proj <- match.arg(proj)
 
   if (densify.x) {
@@ -49,7 +49,7 @@ quick_plot_gg <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", 
     x <- smoothr::densify(x, ...)
   }
 
-  res <- euler_solution(x, sm)
+  res <- euler_solution(x, sc)
   deviation <- data_deviation(x, res)
 
   suppressWarnings(

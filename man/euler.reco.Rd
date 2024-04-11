@@ -3,7 +3,6 @@
 \docType{package}
 \name{euler.reco}
 \alias{euler.reco}
-\alias{_PACKAGE}
 \alias{euler.reco-package}
 \title{library(euler.reco)}
 \description{
