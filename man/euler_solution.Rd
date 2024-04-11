@@ -4,13 +4,13 @@
 \alias{euler_solution}
 \title{Euler pole solution for geological structures}
 \usage{
-euler_solution(x, sm = TRUE, densify.x = FALSE, ...)
+euler_solution(x, sc = TRUE, densify.x = FALSE, ...)
 }
 \arguments{
 \item{x}{either a \code{matrix} or \code{data.frame} containing the geographical coordinates,
 or a \code{sf} object.}
 
-\item{sm}{logical. Whether the structure described by the points \code{x} is
+\item{sc}{logical. Whether the structure described by the points \code{x} is
 expected to follow small (\code{TRUE}) or great circle (\code{FALSE}) arcs?}
 
 \item{densify.x}{logical. Whether the points \code{x} along the lines structure
@@ -60,6 +60,6 @@ euler_solution(tintina)
 euler_solution(tintina, densify.x = TRUE)
 
 data(south_atlantic)
-euler_solution(south_atlantic, sm = TRUE)
-euler_solution(south_atlantic, densify.x = TRUE, sm = TRUE)
+euler_solution(south_atlantic, sc = TRUE)
+euler_solution(south_atlantic, densify.x = TRUE, sc = TRUE)
 }

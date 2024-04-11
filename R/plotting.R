@@ -4,7 +4,7 @@
 #' the data's misfit to the solution and some statistics of the solution.
 #'
 #' @inheritParams to_geomat
-#' @param sm logical. Whether the structure described by the points `x` is
+#' @param sc logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
 #' @param densify.x logical. Whether the points `x` along the lines structure
 #' should be densified before analysis (`TRUE`) or not (`FALSE`, the default).
@@ -24,12 +24,13 @@
 #' @examples
 #' data(tintina)
 #' quick_plot(tintina)
-#' quick_plot(tintina, sm = TRUE, densify.x = TRUE, proj = "omerc")
+#' quick_plot(tintina, proj = "omerc")
 #'
 #' data(south_atlantic)
-#' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "omerc")
-#' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "stereo")
-quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(0, 0)) {
+#' quick_plot(south_atlantic)
+#' quick_plot(south_atlantic, proj = "omerc")
+#' quick_plot(south_atlantic, proj = "stereo")
+quick_plot <- function(x, sc = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(0, 0)) {
   proj <- match.arg(proj)
 
   if (densify.x) {
@@ -48,7 +49,7 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
     x <- smoothr::densify(x, ...)
   }
 
-  res <- euler_solution(x, sm)
+  res <- euler_solution(x, sc)
   deviation <- data_deviation(x, res)
 
   suppressWarnings(
@@ -104,5 +105,5 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
     plot(sf::st_geometry(circle), lty = 2, col = "seagreen", lwd = 1.5, reset = T, extent = box, add = TRUE)
   }
   plot(x2["abs_deviation"], fill = sf::sf.colors(length(breaks)), key.pos = 1, key.size = lcm(1.3), extent = box, add = TRUE)
-  legend("topright", legend = breaks, fill = sf::sf.colors(length(breaks)), title = "|Deviation| (\u00B0)")
+  legend("topright", legend = breaks, fill = sf::sf.colors(length(breaks)), title = "|Deviation| (\u00B0)", bg = 'white')
 }

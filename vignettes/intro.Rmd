@@ -34,9 +34,9 @@ tintina
 ```
 ## Find and evaluate the best-fitting small or circle for the geological structure
 
-The best fit small circle can be retrieved by `euler_solution()`. In our example, the structure represents a strike-slip fault and, thus, expected to follow a small-circle trajectory of the Euler pole to be approximated. Thus, we set the `sm` argument to `TRUE` in order to calculate a small circle fitting the structure:
+The best fit small circle can be retrieved by `euler_solution()`. In our example, the structure represents a strike-slip fault and, thus, expected to follow a small-circle trajectory of the Euler pole to be approximated. Thus, we set the `sc` argument to `TRUE` in order to calculate a small circle fitting the structure:
 ```{r euler_solution}
-res <- euler_solution(tintina, sm = TRUE)
+res <- euler_solution(tintina, sc = TRUE)
 res
 ```
 The function returns the coordinates of the best fit axis centered in the small circle and the small circles angle. 

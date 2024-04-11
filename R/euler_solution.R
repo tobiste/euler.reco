@@ -32,7 +32,7 @@ ep_from_gc <- function(x) {
 #'
 #' @inheritParams to_geomat
 #'
-#' @param sm logical. Whether the structure described by the points `x` is
+#' @param sc logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
 #'
 #' @param densify.x logical. Whether the points `x` along the lines structure
@@ -83,9 +83,9 @@ ep_from_gc <- function(x) {
 #' euler_solution(tintina, densify.x = TRUE)
 #'
 #' data(south_atlantic)
-#' euler_solution(south_atlantic, sm = TRUE)
-#' euler_solution(south_atlantic, densify.x = TRUE, sm = TRUE)
-euler_solution <- function(x, sm = TRUE, densify.x = FALSE, ...) {
+#' euler_solution(south_atlantic, sc = TRUE)
+#' euler_solution(south_atlantic, densify.x = TRUE, sc = TRUE)
+euler_solution <- function(x, sc = TRUE, densify.x = FALSE, ...) {
   if (densify.x) {
     is.sf <- inherits(x, "sf")
     is.df <- is.data.frame(x)
@@ -106,7 +106,7 @@ euler_solution <- function(x, sm = TRUE, densify.x = FALSE, ...) {
     x_coords <- to_geomat(x)
   }
 
-  if (sm) {
+  if (sc) {
     ep_from_sc(x_coords)
   } else {
     ep_from_gc(x_coords)
