@@ -17,7 +17,7 @@
 #' @importFrom sf st_cast st_bbox st_geometry sf.colors
 #' @importFrom dplyr mutate
 #' @importFrom tectonicr euler_pole geographical_to_PoR_sf
-#' @importFrom graphics lcm legend
+#' @importFrom graphics lcm legend abline
 #'
 #' @export
 #'
