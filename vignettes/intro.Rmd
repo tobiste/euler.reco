@@ -1,5 +1,5 @@
 ---
-title: "structr"
+title: "euler.reco"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{structr}
