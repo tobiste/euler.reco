@@ -65,7 +65,7 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
   if (proj == "omerc") {
     x <- tectonicr::geographical_to_PoR_sf(x, ep)
     x2 <- tectonicr::geographical_to_PoR_sf(x2, ep)
-    circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
+    #circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
   } else if(proj == "stereo") {
     crs2 <- ep_stereo_crs(ep)
     x <- sf::st_transform(x, crs2)
@@ -76,6 +76,7 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
   box <- sf::st_bbox(x) + c(-expand[2], expand[2], -expand[1], expand[1])
   breaks <- pretty(x2$abs_deviation, n = 5)
   p.value <- ifelse(stats$p.value < 0.001, "<0.001", signif(stats$p.value, digits = 2))
+
 
   title = paste0(
     "Best fit Euler pole and cone's apical half angle\n",
@@ -97,7 +98,11 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
   )
 
   plot(sf::st_geometry(x), extent = box, graticule = TRUE, axes = TRUE, main = title, sub = sub)
-  plot(sf::st_geometry(circle), lty = 2, col = "seagreen", lwd = 1.5, reset = T, extent = box, add = TRUE)
+  if(proj == "omerc"){
+    abline(h = 90-res['angle'],  lty = 2, col = "seagreen", lwd = 1.5)
+    } else {
+    plot(sf::st_geometry(circle), lty = 2, col = "seagreen", lwd = 1.5, reset = T, extent = box, add = TRUE)
+  }
   plot(x2['abs_deviation'], fill = sf::sf.colors(length(breaks)), key.pos = 1, key.size = lcm(1.3), extent = box,  add = TRUE)
   legend("topright", legend = breaks, fill = sf::sf.colors(length(breaks)), title = "|Deviation| (\u00B0)")
 }
