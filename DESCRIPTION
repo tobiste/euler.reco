@@ -10,6 +10,8 @@ License: MIT + file LICENSE
 Depends: 
     R (>= 3.5.0)
 Imports: 
+    ggplot2,
+    graphics,
     dplyr,
     sf,
     smoothr,
@@ -21,8 +23,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes: 
-    tobiste/structr,
-    tobiste/tectonicr
+    tobiste/structr
 Encoding: UTF-8
 Language: en-US
 LazyData: true

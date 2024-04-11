@@ -1,4 +1,36 @@
-quick_plot_g <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
+#' Plot the Euler pole solution (ggplot2)
+#'
+#' @description Creates a simple ggplot to show the best fit small/great circle,
+#' the data's misfit to the solution and some statistics of the solution.
+#'
+#' @inheritParams to_geomat
+#' @param sc logical. Whether the structure described by the points `x` is
+#' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
+#' @param densify.x logical. Whether the points `x` along the lines structure
+#' should be densified before analysis (`TRUE`) or not (`FALSE`, the default).
+#' Densification would yield equally spaced points along the line.
+#' @param proj character. Whether the plot should be shown in the geographic Mercator projection (`"geo"`, the default), the oblique
+#' Mercator projection with the Euler pole at North (`"omerc"`), or the stereographic projection centered in the Euler pole (`"stereo"`).
+#' @param expand numeric two element vector.  expand the map limits in latitude and longitude (`c(0, 0)` (degrees) by default)
+#' @param ... optional arguments passed to [smoothr::densify()] (only if `densify.x = TRUE`).
+#'
+#' @importFrom sf st_cast st_bbox st_geometry sf.colors
+#' @importFrom dplyr mutate
+#' @importFrom tectonicr euler_pole geographical_to_PoR_sf
+#' @import ggplot2
+#'
+#' @export
+#'
+#' @examples
+#' data(tintina)
+#' quick_plot_gg(tintina)
+#' quick_plot_gg(tintina, proj = "omerc")
+#'
+#' data(south_atlantic)
+#' quick_plot_gg(south_atlantic)
+#' quick_plot_gg(south_atlantic, proj = "omerc")
+#' quick_plot_gg(south_atlantic, proj = "stereo")
+quick_plot_gg <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
   proj <- match.arg(proj)
 
   if (densify.x) {
@@ -34,7 +66,7 @@ quick_plot_g <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "
   if (proj == "omerc") {
     x <- tectonicr::geographical_to_PoR_sf(x, ep)
     x2 <- tectonicr::geographical_to_PoR_sf(x2, ep)
-    circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
+    #circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
   } else if (proj == "stereo") {
     crs2 <- ep_stereo_crs(ep)
     x <- sf::st_transform(x, crs2)
@@ -45,7 +77,13 @@ quick_plot_g <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "
   box <- sf::st_bbox(x)
 
   ggplot2::ggplot() +
-    ggplot2::geom_sf(data = circle, lty = 2, color = "darkgrey") +
+    {
+      if(proj == "omerc"){
+        ggplot2::geom_hline(yintercept = 90 - res[3], lty = 2, color = "darkgrey")
+      } else {
+        ggplot2::geom_sf(data = circle, lty = 2, color = "darkgrey")
+      }
+      }+
     ggplot2::geom_sf(data = x) +
     ggplot2::geom_sf(data = x2, ggplot2::aes(color = abs(deviation))) +
     ggplot2::coord_sf(xlim = c(box[1] - expand[2], box[3] + expand[2]), ylim = c(box[2] - expand[1], box[4] + expand[1])) +

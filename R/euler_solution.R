@@ -1,3 +1,11 @@
+#' Helper functions for euler pole solution
+#'
+#' @param x matrix
+#' @importFrom structr best_fit_plane
+#' @name ep_help
+NULL
+
+#' @rdname ep_help
 ep_from_sc <- function(x) {
   res <- x |>
     geographical_to_cartesian2() |>
@@ -13,6 +21,7 @@ ep_from_sc <- function(x) {
   c(coords, angle, misfit)
 }
 
+#' @rdname ep_help
 ep_from_gc <- function(x) {
   res <- x |>
     geographical_to_cartesian2() |>
