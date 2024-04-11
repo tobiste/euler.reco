@@ -28,6 +28,11 @@ and (for small circle structures) the apical angle (in degrees) of the best fit 
 Finds the best Euler pole solution for a set of geographic locations that
 are aligned along a geological structure.
 }
+\details{
+Based on Gray, N.H., Geiser, P.A., Geiser, J.R. (1980). On the least-square
+fit of small and great circles to spherically projected data. Mathematical
+Geology, Vol. 12, No. 3, 1980
+}
 \examples{
 test <- smallcircle(30, 150, 35)
 euler_solution(test)

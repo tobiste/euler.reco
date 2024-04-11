@@ -7,3 +7,6 @@
 ^doc$
 ^Meta$
 ^R/plotting_ggplot.R
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

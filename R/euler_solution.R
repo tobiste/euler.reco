@@ -50,6 +50,12 @@ ep_from_gc <- function(x) {
 #'
 #' @export
 #'
+#' @details
+#' Based on Gray, N.H., Geiser, P.A., Geiser, J.R. (1980). On the least-square
+#' fit of small and great circles to spherically projected data. Mathematical
+#' Geology, Vol. 12, No. 3, 1980
+#'
+#'
 #' @examples
 #' test <- smallcircle(30, 150, 35)
 #' euler_solution(test)
