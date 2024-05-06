@@ -131,8 +131,8 @@ smallcircle <- function(lat, lon, angle = 90, n = 1000L) {
 #'
 #' @examples
 #' ep_stereo_crs(c(45, 10))
-ep_stereo_crs <- function (x){
-  if(is.numeric(x) | is.matrix(x)){
+ep_stereo_crs <- function(x) {
+  if (is.numeric(x) | is.matrix(x)) {
     x <- data.frame(lat = x[1], lon = x[2])
   }
 
@@ -142,5 +142,5 @@ ep_stereo_crs <- function (x){
     x$lon <- tectonicr::longitude_modulo(x$lon + 180)
   }
 
-  sf::st_crs(paste0("+proj=stere +lat_0=",  x$lat, " +lat_0=", x$lon))
+  sf::st_crs(paste0("+proj=stere +lat_0=", x$lat, " +lat_0=", x$lon))
 }

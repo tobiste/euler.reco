@@ -4,13 +4,13 @@
 \alias{euler_solution}
 \title{Euler pole solution for geological structures}
 \usage{
-euler_solution(x, sm = TRUE, densify.x = FALSE, ...)
+euler_solution(x, sc = TRUE, densify.x = FALSE, ...)
 }
 \arguments{
 \item{x}{either a \code{matrix} or \code{data.frame} containing the geographical coordinates,
 or a \code{sf} object.}
 
-\item{sm}{logical. Whether the structure described by the points \code{x} is
+\item{sc}{logical. Whether the structure described by the points \code{x} is
 expected to follow small (\code{TRUE}) or great circle (\code{FALSE}) arcs?}
 
 \item{densify.x}{logical. Whether the points \code{x} along the lines structure
@@ -27,6 +27,11 @@ and (for small circle structures) the apical angle (in degrees) of the best fit 
 \description{
 Finds the best Euler pole solution for a set of geographic locations that
 are aligned along a geological structure.
+}
+\details{
+Based on Gray, N.H., Geiser, P.A., Geiser, J.R. (1980). On the least-square
+fit of small and great circles to spherically projected data. Mathematical
+Geology, Vol. 12, No. 3, 1980
 }
 \examples{
 test <- smallcircle(30, 150, 35)
@@ -55,6 +60,6 @@ euler_solution(tintina)
 euler_solution(tintina, densify.x = TRUE)
 
 data(south_atlantic)
-euler_solution(south_atlantic, sm = TRUE)
-euler_solution(south_atlantic, densify.x = TRUE, sm = TRUE)
+euler_solution(south_atlantic, sc = TRUE)
+euler_solution(south_atlantic, densify.x = TRUE, sc = TRUE)
 }

@@ -4,7 +4,7 @@
 #' the data's misfit to the solution and some statistics of the solution.
 #'
 #' @inheritParams to_geomat
-#' @param sm logical. Whether the structure described by the points `x` is
+#' @param sc logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
 #' @param densify.x logical. Whether the points `x` along the lines structure
 #' should be densified before analysis (`TRUE`) or not (`FALSE`, the default).
@@ -17,19 +17,20 @@
 #' @importFrom sf st_cast st_bbox st_geometry sf.colors
 #' @importFrom dplyr mutate
 #' @importFrom tectonicr euler_pole geographical_to_PoR_sf
-#' @importFrom graphics lcm legend
+#' @importFrom graphics lcm legend abline
 #'
 #' @export
 #'
 #' @examples
 #' data(tintina)
 #' quick_plot(tintina)
-#' quick_plot(tintina, sm = TRUE, densify.x = TRUE, proj = "omerc")
+#' quick_plot(tintina, proj = "omerc")
 #'
 #' data(south_atlantic)
-#' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "omerc")
-#' quick_plot(south_atlantic, sm = TRUE, densify.x = TRUE, proj = "stereo")
-quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(0, 0)) {
+#' quick_plot(south_atlantic)
+#' quick_plot(south_atlantic, proj = "omerc")
+#' quick_plot(south_atlantic, proj = "stereo")
+quick_plot <- function(x, sc = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(0, 0)) {
   proj <- match.arg(proj)
 
   if (densify.x) {
@@ -48,7 +49,7 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
     x <- smoothr::densify(x, ...)
   }
 
-  res <- euler_solution(x, sm)
+  res <- euler_solution(x, sc)
   deviation <- data_deviation(x, res)
 
   suppressWarnings(
@@ -65,8 +66,8 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
   if (proj == "omerc") {
     x <- tectonicr::geographical_to_PoR_sf(x, ep)
     x2 <- tectonicr::geographical_to_PoR_sf(x2, ep)
-    circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
-  } else if(proj == "stereo") {
+    # circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
+  } else if (proj == "stereo") {
     crs2 <- ep_stereo_crs(ep)
     x <- sf::st_transform(x, crs2)
     x2 <- sf::st_transform(x2, crs2)
@@ -77,7 +78,8 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
   breaks <- pretty(x2$abs_deviation, n = 5)
   p.value <- ifelse(stats$p.value < 0.001, "<0.001", signif(stats$p.value, digits = 2))
 
-  title = paste0(
+
+  title <- paste0(
     "Best fit Euler pole and cone's apical half angle\n",
     "(Lat./Lon.: ",
     round(res[1], digits = 1),
@@ -87,17 +89,21 @@ quick_plot <- function(x, sm = TRUE, densify.x = FALSE, ..., proj = c("geo", "om
     round(res[3], digits = 1),
     "\u00B0)"
   )
-  sub = paste0(
+  sub <- paste0(
     "Misfit: ", signif(res[4], digits = 1),
     " | Dispersion of deviation from 0\u00B0: ", signif(stats$disp, digits = 1),
     "\nMean deviation [95% CI]: ",
     signif(stats$mean, digits = 1), "\u00B0 [",
-    signif(stats$mean-stats$CI95, digits = 2),
-    "\u00B0, ", signif(stats$mean+stats$CI95, digits = 2), "\u00B0] | P value: ", p.value
+    signif(stats$mean - stats$CI95, digits = 2),
+    "\u00B0, ", signif(stats$mean + stats$CI95, digits = 2), "\u00B0] | P value: ", p.value
   )
 
   plot(sf::st_geometry(x), extent = box, graticule = TRUE, axes = TRUE, main = title, sub = sub)
-  plot(sf::st_geometry(circle), lty = 2, col = "seagreen", lwd = 1.5, reset = T, extent = box, add = TRUE)
-  plot(x2['abs_deviation'], fill = sf::sf.colors(length(breaks)), key.pos = 1, key.size = lcm(1.3), extent = box,  add = TRUE)
-  legend("topright", legend = breaks, fill = sf::sf.colors(length(breaks)), title = "|Deviation| (\u00B0)")
+  if (proj == "omerc") {
+    abline(h = 90 - res["angle"], lty = 2, col = "seagreen", lwd = 1.5)
+  } else {
+    plot(sf::st_geometry(circle), lty = 2, col = "seagreen", lwd = 1.5, reset = T, extent = box, add = TRUE)
+  }
+  plot(x2["abs_deviation"], fill = sf::sf.colors(length(breaks)), key.pos = 1, key.size = lcm(1.3), extent = box, add = TRUE)
+  legend("topright", legend = breaks, fill = sf::sf.colors(length(breaks)), title = "|Deviation| (\u00B0)", bg = 'white')
 }

@@ -1,3 +1,11 @@
+#' Helper functions for euler pole solution
+#'
+#' @param x matrix
+#' @importFrom structr best_fit_plane
+#' @name ep_help
+NULL
+
+#' @rdname ep_help
 ep_from_sc <- function(x) {
   res <- x |>
     geographical_to_cartesian2() |>
@@ -13,6 +21,7 @@ ep_from_sc <- function(x) {
   c(coords, angle, misfit)
 }
 
+#' @rdname ep_help
 ep_from_gc <- function(x) {
   res <- x |>
     geographical_to_cartesian2() |>
@@ -32,7 +41,7 @@ ep_from_gc <- function(x) {
 #'
 #' @inheritParams to_geomat
 #'
-#' @param sm logical. Whether the structure described by the points `x` is
+#' @param sc logical. Whether the structure described by the points `x` is
 #' expected to follow small (`TRUE`) or great circle (`FALSE`) arcs?
 #'
 #' @param densify.x logical. Whether the points `x` along the lines structure
@@ -49,6 +58,12 @@ ep_from_gc <- function(x) {
 #' and (for small circle structures) the apical angle (in degrees) of the best fit Euler pole.
 #'
 #' @export
+#'
+#' @details
+#' Based on Gray, N.H., Geiser, P.A., Geiser, J.R. (1980). On the least-square
+#' fit of small and great circles to spherically projected data. Mathematical
+#' Geology, Vol. 12, No. 3, 1980
+#'
 #'
 #' @examples
 #' test <- smallcircle(30, 150, 35)
@@ -77,9 +92,9 @@ ep_from_gc <- function(x) {
 #' euler_solution(tintina, densify.x = TRUE)
 #'
 #' data(south_atlantic)
-#' euler_solution(south_atlantic, sm = TRUE)
-#' euler_solution(south_atlantic, densify.x = TRUE, sm = TRUE)
-euler_solution <- function(x, sm = TRUE, densify.x = FALSE, ...) {
+#' euler_solution(south_atlantic, sc = TRUE)
+#' euler_solution(south_atlantic, densify.x = TRUE, sc = TRUE)
+euler_solution <- function(x, sc = TRUE, densify.x = FALSE, ...) {
   if (densify.x) {
     is.sf <- inherits(x, "sf")
     is.df <- is.data.frame(x)
@@ -100,7 +115,7 @@ euler_solution <- function(x, sm = TRUE, densify.x = FALSE, ...) {
     x_coords <- to_geomat(x)
   }
 
-  if (sm) {
+  if (sc) {
     ep_from_sc(x_coords)
   } else {
     ep_from_gc(x_coords)
