@@ -1,0 +1,10 @@
+pandoc: 3.1.11
+pkgdown: 2.0.9
+pkgdown_sha: ~
+articles:
+  intro: intro.html
+last_built: 2024-05-06T16:11Z
+urls:
+  reference: https://tobiste.github.io/euler.reco/reference
+  article: https://tobiste.github.io/euler.reco/articles
+
