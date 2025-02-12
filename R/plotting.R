@@ -1,7 +1,7 @@
 #' Plot the Euler pole solution
 #'
 #' @description Creates a simple ggplot to show the best fit small/great circle,
-#' the data's misfit to the solution and some statistics of the solution.
+#' the data misfit to the solution and some statistics of the solution.
 #'
 #' @inheritParams to_geomat
 #' @param sc logical. Whether the structure described by the points `x` is
@@ -14,10 +14,7 @@
 #' @param expand numeric two element vector.  expand the map limits in latitude and longitude (`c(0, 0)` (degrees) by default)
 #' @param ... optional arguments passed to [smoothr::densify()] (only if `densify.x = TRUE`).
 #'
-#' @importFrom sf st_cast st_bbox st_geometry sf.colors
-#' @importFrom dplyr mutate
-#' @importFrom tectonicr euler_pole geographical_to_PoR_sf
-#' @importFrom graphics lcm legend abline
+#' @importFrom graphics abline lcm legend
 #'
 #' @export
 #'

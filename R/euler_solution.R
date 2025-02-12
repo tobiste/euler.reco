@@ -6,32 +6,29 @@
 NULL
 
 #' @rdname ep_help
+#' @importFrom stats setNames
 ep_from_sc <- function(x) {
   res <- x |>
     geographical_to_cartesian2() |>
     structr::best_fit_plane()
   coords <- res$axis_c |>
     cartesian_to_geographical2()
-  names(coords) <- c("lat", "lon")
   angle <- res$cone_angle * 180 / pi
   if (angle > 90) angle <- 180 - angle
-  misfit <- res$r_s
-  names(angle) <- "angle"
-  names(misfit) <- "misfit"
-  c(coords, angle, misfit)
+
+  setNames(c(coords, angle,  res$r_s), c('lat', 'lon', 'angle', 'misfit'))
 }
 
 #' @rdname ep_help
+#' @importFrom stats setNames
 ep_from_gc <- function(x) {
   res <- x |>
     geographical_to_cartesian2() |>
     structr::best_fit_plane()
   coords <- res$axis_g |>
     cartesian_to_geographical2()
-  names(coords) <- c("lat", "lon")
   misfit <- res$r_g
-  names(misfit) <- "misfit"
-  c(coords, angle = 90, misfit)
+  setNames(c(coords, 90, misfit), c('lat', 'lon', 'angle', 'misfit'))
 }
 
 #' Euler pole solution for geological structures

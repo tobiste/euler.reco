@@ -1,4 +1,4 @@
-#' Distribution of spherical coordinates
+#' Distribution of Spherical Coordinates
 #'
 #' @description Statistics on the distribution of geographic locations
 #'
@@ -28,7 +28,7 @@ geo_stats <- function(x) {
 }
 
 
-#' Deviation of input data from Euler pole solution
+#' Deviation of Input Data from Euler Pole Solution
 #'
 #' @description Calculates angular distance of the input points to the small or great circle
 #' of the Euler pole solution

@@ -86,9 +86,7 @@ cartesian_to_geographical2 <- function(x) {
 #'
 #' @returns `sf` object
 #'
-#' @importFrom sf st_as_sf st_cast st_wrap_dateline
 #' @importFrom dplyr summarise
-#' @importFrom tectonicr euler_pole PoR_to_geographical_sf
 #'
 #' @export
 #'

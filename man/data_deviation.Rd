@@ -2,7 +2,7 @@
 % Please edit documentation in R/stats.R
 \name{data_deviation}
 \alias{data_deviation}
-\title{Deviation of input data from Euler pole solution}
+\title{Deviation of Input Data from Euler Pole Solution}
 \usage{
 data_deviation(x, ep, sm = TRUE)
 }

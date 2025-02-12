@@ -2,7 +2,7 @@
 % Please edit documentation in R/stats.R
 \name{geo_stats}
 \alias{geo_stats}
-\title{Distribution of spherical coordinates}
+\title{Distribution of Spherical Coordinates}
 \usage{
 geo_stats(x)
 }
