@@ -24,7 +24,7 @@ install.packages("remotes")
 
 ## Installation
 
-The most recent development version of **euler.reco** is available from Github and can be installed on your system as follows:
+The most recent development version of `euler.reco` is available from Github and can be installed on your system as follows:
 
 ```
 remotes::install_github('tobiste/euler.reco')
@@ -33,11 +33,9 @@ library('euler.reco')
 
 ## Documentation
 
-A brief documentation and application are presented in the vignette file.
+The detailed documentation can be found at 
+https://tobiste.github.io/euler.reco/
 
-```
-vignette('intro', package = "euler.reco")
-```
 
 ## Author
 Tobias Stephan
