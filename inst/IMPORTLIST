@@ -1,3 +1,5 @@
 as.data.frame = base
 atan2 = base
+median = stats
+nrow = base
 plot = base

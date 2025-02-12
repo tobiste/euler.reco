@@ -142,3 +142,40 @@ ep_stereo_crs <- function(x) {
 
   sf::st_crs(paste0("+proj=stere +lat_0=", x$lat, " +lat_0=", x$lon))
 }
+
+
+
+
+npts <- function(x) {
+  sf::st_coordinates(x) |>
+    nrow()
+}
+
+#' Generates a grid from max and min coordinates
+#'
+#' @param x_range,y_range two-column vector giving the minimum and maximum coordinates. Unit as implied by `crs`
+#' @param gridsize size of grid points. Unit as implied by `crs`
+#' @param crs Coordinate reference system. Should be parsed by [sf::st_crs()]. Default is `4326`
+#' @param ... arguments passed to [sf::st_make_grid()]
+#'
+#' @return `sf` object
+#' @export
+#'
+#' @examples
+#' latlon_grid()
+latlon_grid <- function(x_range = c(-180, 180), y_range = c(0, 90), gridsize = 10, crs = 4326, ...){
+  sf::st_bbox(
+    c(
+      xmin = x_range[1],
+      xmax = x_range[2],
+      ymin = y_range[1],
+      ymax = y_range[2]
+    ),
+    crs = sf::st_crs(crs)
+  ) |>
+    sf::st_make_grid(
+      cellsize = gridsize,
+      what = "centers",
+      offset = c(x_range[1], y_range[1]), ...
+    )
+}

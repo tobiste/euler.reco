@@ -16,10 +16,13 @@ Imports:
     sf,
     smoothr,
     structr,
-    tectonicr
+    tectonicr,
+    terra,
+    tidyterra
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    patchwork
 VignetteBuilder: 
     knitr
 Remotes: 

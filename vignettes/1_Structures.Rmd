@@ -1,10 +1,10 @@
 ---
-title: "euler.reco"
+title: "1. Reconstructing Euler poles from Structures"
 author: "Tobias Stephan"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{euler.reco}
+  %\VignetteIndexEntry{1. Reconstructing Euler poles from Structures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 editor_options: 

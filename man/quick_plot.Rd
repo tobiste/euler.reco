@@ -33,7 +33,7 @@ Mercator projection with the Euler pole at North (\code{"omerc"}), or the stereo
 }
 \description{
 Creates a simple ggplot to show the best fit small/great circle,
-the data's misfit to the solution and some statistics of the solution.
+the data misfit to the solution and some statistics of the solution.
 }
 \examples{
 data(tintina)
