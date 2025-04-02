@@ -108,7 +108,7 @@ smallcircle <- function(lat, lon, angle = 90, n = 1000L) {
       quiet = TRUE
     )
 
-  tectonicr::PoR_to_geographical_sf(sm_np, pole) |>
+  tectonicr::PoR_to_geographical(sm_np, pole) |>
     sf::st_wrap_dateline(
       options = c("WRAPDATELINE=YES", "DATELINEOFFSET=180"),
       quiet = TRUE

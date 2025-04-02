@@ -16,7 +16,7 @@
 #'
 #' @importFrom sf st_cast st_bbox st_geometry sf.colors
 #' @importFrom dplyr mutate
-#' @importFrom tectonicr euler_pole geographical_to_PoR_sf
+#' @importFrom tectonicr euler_pole geographical_to_PoR
 #' @importFrom ggplot2 ggplot aes geom_hline geom_sf coord_sf scale_color_viridis_c labs
 #'
 #' @export
@@ -64,8 +64,8 @@ quick_plot_gg <- function(x, sc = TRUE, densify.x = FALSE, ..., proj = c("geo", 
 
   ep <- tectonicr::euler_pole(res[1], res[2])
   if (proj == "omerc") {
-    x <- tectonicr::geographical_to_PoR_sf(x, ep)
-    x2 <- tectonicr::geographical_to_PoR_sf(x2, ep)
+    x <- tectonicr::geographical_to_PoR(x, ep)
+    x2 <- tectonicr::geographical_to_PoR(x2, ep)
     #circle <- tectonicr::geographical_to_PoR_sf(circle, ep)
   } else if (proj == "stereo") {
     crs2 <- ep_stereo_crs(ep)

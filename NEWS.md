@@ -1,3 +1,5 @@
+# euler.reco (development version)
+
 # euler.reco 0.2.0
 
 * bug fix in quick_plot()
