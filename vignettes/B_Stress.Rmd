@@ -1,10 +1,10 @@
 ---
-title: "2. Reconstructing Euler poles from Stress Data"
+title: "2. Reconstructing Euler Poles from Stress Data"
 author: "Tobias Stephan"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{2. Reconstructing Euler poles from Stress Data}
+  %\VignetteIndexEntry{2. Reconstructing Euler Poles from Stress Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 editor_options: 
@@ -44,12 +44,12 @@ data(san_andreas)
 data("cpm_models", package = 'tectonicr')
 
 search_grid <- latlon_grid(gridsize = 10)
-res_grid_sa <- ep_stress_dispersion(san_andreas, search_grid, prd = 135)
+res_grid_sa <- euler_stress_dispersion(san_andreas, search_grid, prd = 135)
 ```
 
 An optimization approach iteratively increases the grid resolution in the low-dispersion regions to find the best-fit location of the Euler pole describing the motion of the Pacific plate relative to North America:
 ```{r san_andreas2, echo=TRUE, message=FALSE}
-best_ep_sa <- ep_from_stress(san_andreas, prd = 135, iter = 3)
+best_ep_sa <- euler_from_stress(san_andreas, prd = 135, iter = 3)
 ```
 
 Finally, we plot the results and compare the Euler pole solutions from the 1st iteration, the optimized result from multiple iterations, and the Euler pole of the GSRM2 model:
@@ -93,8 +93,8 @@ euna <- cpm_models$GSRM2.1 |>
   ) |>
   st_as_sf(coords = c("lon", "lat"), crs = 4326)
 
-res_grid_ice <- ep_stress_dispersion(iceland, search_grid, prd = 0)
-best_ep_ice <- ep_from_stress(iceland, prd = 0, iter = 3)
+res_grid_ice <- euler_stress_dispersion(iceland, search_grid, prd = 0)
+best_ep_ice <- euler_from_stress(iceland, prd = 0, iter = 3)
 
 ggplot() +
   geom_spatraster(data = res_grid_ice, aes(fill = dispersion)) +
@@ -127,8 +127,8 @@ ineu <- cpm_models$GSRM2.1 |>
   ) |>
   st_as_sf(coords = c("lon", "lat"), crs = 4326)
 
-res_grid_tibet <- ep_stress_dispersion(tibet, search_grid, prd = 90)
-best_ep_tibet <- ep_from_stress(tibet, prd = 90, iter = 3)
+res_grid_tibet <- euler_stress_dispersion(tibet, search_grid, prd = 90)
+best_ep_tibet <- euler_from_stress(tibet, prd = 90, iter = 3)
 
 tibet.ep.plot <- ggplot() +
   geom_spatraster(data = res_grid_tibet, aes(fill = dispersion)) +

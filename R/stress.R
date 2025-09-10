@@ -13,8 +13,8 @@
 #' @importFrom terra as.data.frame
 #' @examples
 #' data("san_andreas", package = "tectonicr")
-#' ep_stress_dispersion(san_andreas, grid = latlon_grid(gridsize = 10), prd = 135)
-ep_stress_dispersion <- function(x, grid, prd, prob = .75) {
+#' euler_stress_dispersion(san_andreas, grid = latlon_grid(gridsize = 10), prd = 135)
+euler_stress_dispersion <- function(x, grid, prd, prob = .75) {
   grid_df <- grid |>
     sf::st_coordinates() |>
     as.data.frame() |>
@@ -57,7 +57,7 @@ ep_stress_dispersion <- function(x, grid, prd, prob = .75) {
 #'
 #' @examples
 #' data("san_andreas", package = "tectonicr")
-#' ep_stress_dispersion(san_andreas, grid = latlon_grid(gridsize = 10), prd = 135) |>
+#' euler_stress_dispersion(san_andreas, grid = latlon_grid(gridsize = 10), prd = 135) |>
 #'   extract_best_ep_from_grid()
 extract_best_ep_from_grid <- function(x, antipode = FALSE) {
   ep <- terra::as.data.frame(x, xy = TRUE) |>
@@ -80,7 +80,7 @@ extract_best_ep_from_grid <- function(x, antipode = FALSE) {
 #' @param grid grid given as `sfc` object
 #' @param dispersion.threshold numeric. Threshold for dispersion
 #' @param fact positive integer. Aggregation factor to increase number of cells in each direction (horizontally and vertically.
-#' @param ... optional arguments passed to [ep_stress_dispersion()]
+#' @param ... optional arguments passed to [euler_stress_dispersion()]
 #'
 #' @return SpatRast
 #' @importFrom terra disagg crs
@@ -93,7 +93,7 @@ refine_ep_dispersion <- function(x, grid, dispersion.threshold, fact = 2, ...) {
     terra::as.data.frame(xy = TRUE) |>
     sf::st_as_sf(coords = c("x", "y"), crs = terra::crs(grid)) |>
     sf::st_as_sfc()
-  ep_stress_dispersion(x, grid3, ...)
+  euler_stress_dispersion(x, grid3, ...)
 }
 
 #' Best Euler Pole Solution for Shmax Data
@@ -108,7 +108,7 @@ refine_ep_dispersion <- function(x, grid, dispersion.threshold, fact = 2, ...) {
 #' \code{unc} (optional)
 #' @param iter positive integer. Number of iterations to refine the Euler pole solution
 #' @param fact positive integer. Aggregation factor to increase number of cells in each direction (horizontally and vertically, applied in each iteration.
-#' @param ... optional arguments passed to [ep_stress_dispersion()]
+#' @param ... optional arguments passed to [euler_stress_dispersion()]
 #'
 #' @return `sf` POINT object
 #' @export
@@ -116,12 +116,12 @@ refine_ep_dispersion <- function(x, grid, dispersion.threshold, fact = 2, ...) {
 #' @examples
 #' \dontrun{
 #' data("san_andreas", package = "tectonicr")
-#' ep_from_stress(san_andreas, prd = 135)
+#' euler_from_stress(san_andreas, prd = 135)
 #' }
-ep_from_stress <- function(x, iter = 3, fact = 2, ...) {
+euler_from_stress <- function(x, iter = 3, fact = 2, ...) {
   message(paste("Iteration 1"))
   start_grid <- latlon_grid(gridsize = 10)
-  res <- ep_stress_dispersion(x, grid = start_grid, ...)
+  res <- euler_stress_dispersion(x, grid = start_grid, ...)
   i <- 2
   while (i <= (iter - 1)) {
     message(paste("Iteration", i))

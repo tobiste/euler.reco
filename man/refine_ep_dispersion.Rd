@@ -18,7 +18,7 @@ refine_ep_dispersion(x, grid, dispersion.threshold, fact = 2, ...)
 
 \item{fact}{positive integer. Aggregation factor to increase number of cells in each direction (horizontally and vertically.}
 
-\item{...}{optional arguments passed to \code{\link[=ep_stress_dispersion]{ep_stress_dispersion()}}}
+\item{...}{optional arguments passed to \code{\link[=euler_stress_dispersion]{euler_stress_dispersion()}}}
 }
 \value{
 SpatRast

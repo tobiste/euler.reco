@@ -64,7 +64,7 @@ ep_from_gc <- function(x) {
 #'
 #' @examples
 #' test <- smallcircle(30, 150, 35)
-#' euler_solution(test)
+#' euler_reco(test)
 #'
 #' # Example from Price and Carmicheal (1986), GEOLOGY:
 #'
@@ -74,24 +74,24 @@ ep_from_gc <- function(x) {
 #'   "bigbend" = c(52.25, -122.65),
 #'   "washington" = c(47.85, -121.85)
 #' )
-#' euler_solution(rmt_mat)
+#' euler_reco(rmt_mat)
 #'
 #' # from data.frame
 #' rmt_df <- data.frame("lat" = rmt_mat[, 1], "lon" = rmt_mat[, 2])
-#' euler_solution(rmt_df)
+#' euler_reco(rmt_df)
 #'
 #' # from sf object
 #' rmt_sf <- sf::st_as_sf(rmt_df, coords = c("lon", "lat"), crs = "WGS84")
-#' euler_solution(rmt_sf)
+#' euler_reco(rmt_sf)
 #'
 #' data(tintina)
-#' euler_solution(tintina)
-#' euler_solution(tintina, densify.x = TRUE)
+#' euler_reco(tintina)
+#' euler_reco(tintina, densify.x = TRUE)
 #'
 #' data(south_atlantic)
-#' euler_solution(south_atlantic, sc = TRUE)
-#' euler_solution(south_atlantic, densify.x = TRUE, sc = TRUE)
-euler_solution <- function(x, sc = TRUE, densify.x = FALSE, ...) {
+#' euler_reco(south_atlantic, sc = TRUE)
+#' euler_reco(south_atlantic, densify.x = TRUE, sc = TRUE)
+euler_reco <- function(x, sc = TRUE, densify.x = FALSE, ...) {
   if (densify.x) {
     is.sf <- inherits(x, "sf")
     is.df <- is.data.frame(x)

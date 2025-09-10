@@ -23,14 +23,14 @@
 #'
 #' @examples
 #' data(tintina)
-#' quick_plot_gg(tintina)
-#' quick_plot_gg(tintina, proj = "omerc")
+#' euler_ggplot(tintina)
+#' euler_ggplot(tintina, proj = "omerc")
 #'
 #' data(south_atlantic)
-#' quick_plot_gg(south_atlantic)
-#' quick_plot_gg(south_atlantic, proj = "omerc")
-#' quick_plot_gg(south_atlantic, proj = "stereo")
-quick_plot_gg <- function(x, sc = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
+#' euler_ggplot(south_atlantic)
+#' euler_ggplot(south_atlantic, proj = "omerc")
+#' euler_ggplot(south_atlantic, proj = "stereo")
+euler_ggplot <- function(x, sc = TRUE, densify.x = FALSE, ..., proj = c("geo", "omerc", "stereo"), expand = c(1, 1)) {
   proj <- match.arg(proj)
 
   if (densify.x) {
@@ -49,8 +49,8 @@ quick_plot_gg <- function(x, sc = TRUE, densify.x = FALSE, ..., proj = c("geo", 
     x <- smoothr::densify(x, ...)
   }
 
-  res <- euler_solution(x, sc)
-  deviation <- data_deviation(x, res)
+  res <- euler_reco(x, sc)
+  deviation <- euler_deviation(x, res)
 
   suppressWarnings(
     x2 <- sf::st_cast(x, "POINT") |>
@@ -59,7 +59,7 @@ quick_plot_gg <- function(x, sc = TRUE, densify.x = FALSE, ..., proj = c("geo", 
 
   circle <- smallcircle(res[1], res[2], res[3])
   suppressMessages(
-    stats <- deviation_stats(x2$deviation)
+    stats <- euler_summary(x2$deviation)
   )
 
   ep <- tectonicr::euler_pole(res[1], res[2])

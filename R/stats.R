@@ -8,7 +8,7 @@
 #'
 #' @export
 #'
-#' @importFrom structr v_mean v_delta v_var
+#' @importFrom structr as.Vec3 mean delta var
 #' @importFrom tectonicr rad2deg cartesian_to_geographical
 #'
 #' @examples
@@ -16,14 +16,16 @@
 #' geo_stats(xy)
 geo_stats <- function(x) {
   x_cart <- to_geomat(x) |>
-    geographical_to_cartesian2()
+    geographical_to_cartesian2() |>
+    structr::as.Vec3()
   xmean <- x_cart |>
-    structr::v_mean() |>
+    structr::mean() |>
+    unclass() |>
     tectonicr::cartesian_to_geographical()
   xsd <- x_cart |>
-    structr::v_delta() |>
+    structr::delta() |>
     tectonicr::rad2deg()
-  xvar <- structr::v_var(x_cart)
+  xvar <- structr::var(x_cart)
   c(lat = xmean[1], lon = xmean[2], delta = xsd, var = xvar)
 }
 
@@ -43,13 +45,13 @@ geo_stats <- function(x) {
 #'
 #' @examples
 #' data(tintina)
-#' res1 <- euler_solution(tintina)
-#' data_deviation(tintina, res1)
+#' res1 <- euler_reco(tintina)
+#' euler_deviation(tintina, res1)
 #'
 #' data(south_atlantic)
-#' res2 <- euler_solution(south_atlantic)
-#' data_deviation(south_atlantic, res2)
-data_deviation <- function(x, ep, sm = TRUE) {
+#' res2 <- euler_reco(south_atlantic)
+#' euler_deviation(south_atlantic, res2)
+euler_deviation <- function(x, ep, sm = TRUE) {
   pts <- to_geomat(x) |>
     geographical_to_cartesian2()
 
@@ -89,10 +91,10 @@ ep_pts_distance <- function(x, y, z, ep) {
 #'
 #' @examples
 #' data(tintina)
-#' res <- euler_solution(tintina)
-#' m <- data_deviation(tintina, res)
-#' deviation_stats(m)
-deviation_stats <- function(x) {
+#' res <- euler_reco(tintina)
+#' m <- euler_deviation(tintina, res)
+#' euler_summary(m)
+euler_summary <- function(x) {
   # x <- tectonicr::deviation_norm(x)
   mean_dev <- tectonicr::circular_mean(x)
   if (mean_dev > 90) {

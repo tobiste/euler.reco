@@ -19,6 +19,6 @@ Extract Best Euler Pole from Dispersion Grid
 }
 \examples{
 data("san_andreas", package = "tectonicr")
-ep_stress_dispersion(san_andreas, grid = latlon_grid(gridsize = 10), prd = 135) |>
+euler_stress_dispersion(san_andreas, grid = latlon_grid(gridsize = 10), prd = 135) |>
   extract_best_ep_from_grid()
 }
