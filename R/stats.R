@@ -55,11 +55,11 @@ euler_deviation <- function(x, ep, sm = TRUE) {
   pts <- to_geomat(x) |>
     geographical_to_cartesian2()
 
-  epc <- tectonicr::geographical_to_cartesian(c(ep[1], ep[2]))
+  epc <- tectonicr::geographical_to_cartesian(c(ep[, 'lat'], ep[, 'lon']))
 
   # distance to Euler pole
   epdist <- mapply(FUN = ep_pts_distance, x = pts[, 1], y = pts[, 2], z = pts[, 3], MoreArgs = list(ep = epc))
-  ep[3] - epdist
+  ep[, 'angle'] - epdist
 }
 
 ep_pts_distance <- function(x, y, z, ep) {

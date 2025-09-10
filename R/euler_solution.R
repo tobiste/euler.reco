@@ -16,7 +16,7 @@ ep_from_sc <- function(x) {
   angle <- res$cone_angle * 180 / pi
   if (angle > 90) angle <- 180 - angle
 
-  setNames(c(coords, angle,  res$r_s), c('lat', 'lon', 'angle', 'misfit'))
+  t(setNames(c(coords, angle,  res$r_s), c('lat', 'lon', 'angle', 'misfit')))
 }
 
 #' @rdname ep_help
@@ -28,7 +28,7 @@ ep_from_gc <- function(x) {
   coords <- res$axis_g |>
     cartesian_to_geographical2()
   misfit <- res$r_g
-  setNames(c(coords, 90, misfit), c('lat', 'lon', 'angle', 'misfit'))
+  t(setNames(c(coords, 90, misfit), c('lat', 'lon', 'angle', 'misfit')))
 }
 
 #' Euler pole solution for geological structures

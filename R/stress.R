@@ -25,9 +25,7 @@ euler_stress_dispersion <- function(x, grid, prd, prob = .75) {
   }
   weights <- 1 / x$unc
 
-
-  d <- numeric(nrow(grid_df))
-  for (i in seq_along(grid_df$lon)) {
+  d <- sapply(seq_along(grid_df$lon), function(i){
     azi <- tectonicr::PoR_shmax(x, grid_df[i, ])
     cd <- tectonicr::circular_distance(azi, prd)
 
@@ -35,8 +33,8 @@ euler_stress_dispersion <- function(x, grid, prd, prob = .75) {
 
     azi_in <- azi[cd >= upp]
     w_in <- weights[cd >= upp]
-    d[i] <- tectonicr::circular_dispersion(azi_in, y = prd, w = w_in)
-  }
+    tectonicr::circular_dispersion(azi_in, y = prd, w = w_in)
+  })
 
   grid_df |>
     dplyr::bind_cols(dispersion = d) |>
@@ -62,12 +60,12 @@ euler_stress_dispersion <- function(x, grid, prd, prob = .75) {
 extract_best_ep_from_grid <- function(x, antipode = FALSE) {
   ep <- terra::as.data.frame(x, xy = TRUE) |>
     dplyr::filter(dispersion == min(dispersion))
+
   if (antipode) {
-    ep <- dplyr::mutate(ep,
-      x = tectonicr::longitude_modulo(x + 180),
-      y = -y
-    )
+    ep$x <- tectonicr::longitude_modulo(ep$x + 180)
+    ep$y <- -ep$y
   }
+
   sf::st_as_sf(ep, coords = c("x", "y"), crs = terra::crs(x))
 }
 
@@ -119,16 +117,17 @@ refine_ep_dispersion <- function(x, grid, dispersion.threshold, fact = 2, ...) {
 #' euler_from_stress(san_andreas, prd = 135)
 #' }
 euler_from_stress <- function(x, iter = 3, fact = 2, ...) {
-  message(paste("Iteration 1"))
-  start_grid <- latlon_grid(gridsize = 10)
-  res <- euler_stress_dispersion(x, grid = start_grid, ...)
-  i <- 2
-  while (i <= (iter - 1)) {
-    message(paste("Iteration", i))
-    meddisp <- stats::median(terra::values(res), na.rm = TRUE)
+  message("Iteration 1")
+  res <- euler_stress_dispersion(x, grid = latlon_grid(gridsize = 10), ...)
 
-    res <- refine_ep_dispersion(x, grid = res, dispersion.threshold = meddisp, fact = fact, ...)
-    i <- i + 1
+  if (iter >= 2) {
+    for (i in 2:(iter)) {
+      message(sprintf("Iteration %d", i))
+      disp <- terra::values(res)[, 'dispersion']
+      meddisp <- stats::median(disp, na.rm = TRUE)
+      res <- refine_ep_dispersion(x, grid = res, dispersion.threshold = meddisp, fact = fact, ...)
+    }
   }
+
   extract_best_ep_from_grid(res)
 }
