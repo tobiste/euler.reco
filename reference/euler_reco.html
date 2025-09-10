@@ -90,8 +90,8 @@ Geology, Vol. 12, No. 3, 1980</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="smallcircle.html">smallcircle</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">150</span>, <span class="fl">35</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">euler_reco</span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          lat          lon        angle       misfit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3.000000e+01 1.500000e+02 3.500000e+01 5.780875e-11 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      lat lon angle       misfit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  30 150    35 5.780875e-11</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example from Price and Carmicheal (1986), GEOLOGY:</span></span></span>
 <span class="r-in"><span></span></span>
@@ -102,36 +102,36 @@ Geology, Vol. 12, No. 3, 1980</p>
 <span class="r-in"><span>  <span class="st">"washington"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">47.85</span>, <span class="op">-</span><span class="fl">121.85</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">euler_reco</span><span class="op">(</span><span class="va">rmt_mat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           lat           lon         angle        misfit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -4.169012e+01  2.392828e+01  2.484264e+01  2.879342e-29 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            lat      lon    angle       misfit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -41.69012 23.92828 24.84264 2.879342e-29</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># from data.frame</span></span></span>
 <span class="r-in"><span><span class="va">rmt_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="st">"lat"</span> <span class="op">=</span> <span class="va">rmt_mat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="st">"lon"</span> <span class="op">=</span> <span class="va">rmt_mat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">euler_reco</span><span class="op">(</span><span class="va">rmt_df</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           lat           lon         angle        misfit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -4.169012e+01  2.392828e+01  2.484264e+01  2.879342e-29 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            lat      lon    angle       misfit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -41.69012 23.92828 24.84264 2.879342e-29</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># from sf object</span></span></span>
 <span class="r-in"><span><span class="va">rmt_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">rmt_df</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="st">"WGS84"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">euler_reco</span><span class="op">(</span><span class="va">rmt_sf</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           lat           lon         angle        misfit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -4.169012e+01  2.392828e+01  2.484264e+01  2.879342e-29 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            lat      lon    angle       misfit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -41.69012 23.92828 24.84264 2.879342e-29</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">tintina</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">euler_reco</span><span class="op">(</span><span class="va">tintina</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           lat           lon         angle        misfit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2.508365e+01 -1.598391e+02  4.111992e+01  4.440427e-03 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           lat       lon    angle      misfit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 25.08365 -159.8391 41.11992 0.004440427</span>
 <span class="r-in"><span><span class="fu">euler_reco</span><span class="op">(</span><span class="va">tintina</span>, densify.x <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           lat           lon         angle        misfit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   24.65028141 -160.15652881   41.62510809    0.04028761 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           lat       lon    angle     misfit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 24.65028 -160.1565 41.62511 0.04028761</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">south_atlantic</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">euler_reco</span><span class="op">(</span><span class="va">south_atlantic</span>, sc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           lat           lon         angle        misfit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -6.040911e+01  1.449658e+02  6.012862e+01  5.442767e-05 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            lat      lon    angle       misfit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -60.40911 144.9658 60.12862 5.442767e-05</span>
 <span class="r-in"><span><span class="fu">euler_reco</span><span class="op">(</span><span class="va">south_atlantic</span>, densify.x <span class="op">=</span> <span class="cn">TRUE</span>, sc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           lat           lon         angle        misfit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -5.973840e+01  1.456660e+02  5.940073e+01  3.309771e-04 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           lat     lon    angle       misfit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -59.7384 145.666 59.40073 0.0003309771</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
