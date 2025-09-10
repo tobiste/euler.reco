@@ -1,4 +1,4 @@
-# euler.reco (development version)
+# euler.reco 0.2.1
 
 # euler.reco 0.2.0
 
