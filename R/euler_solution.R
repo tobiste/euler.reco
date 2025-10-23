@@ -1,7 +1,7 @@
 #' Helper functions for euler pole solution
 #'
 #' @param x matrix
-#' @importFrom structr best_fit_plane
+#' @importFrom structr as.Vec3 regression_gray
 #' @name ep_help
 NULL
 
@@ -10,13 +10,15 @@ NULL
 ep_from_sc <- function(x) {
   res <- x |>
     geographical_to_cartesian2() |>
-    structr::best_fit_plane()
+    structr::as.Vec3() |>
+    structr::regression_gray()
   coords <- res$axis_c |>
     cartesian_to_geographical2()
   angle <- res$cone_angle * 180 / pi
   if (angle > 90) angle <- 180 - angle
+  misfit <- res$r_c
 
-  t(setNames(c(coords, angle,  res$r_s), c('lat', 'lon', 'angle', 'misfit')))
+  t(setNames(c(coords, angle, misfit), c('lat', 'lon', 'angle', 'misfit')))
 }
 
 #' @rdname ep_help
@@ -24,7 +26,8 @@ ep_from_sc <- function(x) {
 ep_from_gc <- function(x) {
   res <- x |>
     geographical_to_cartesian2() |>
-    structr::best_fit_plane()
+    structr::as.Vec3() |>
+    structr::regression_gray()
   coords <- res$axis_g |>
     cartesian_to_geographical2()
   misfit <- res$r_g
@@ -51,13 +54,13 @@ ep_from_gc <- function(x) {
 #' @importFrom sf st_coordinates st_as_sf
 #' @importFrom smoothr densify
 #'
-#' @returns numeric vector given the latitude (in degrees), longitude (in degrees), the misfit (0 - low, 1 - high),
-#' and (for small circle structures) the apical angle (in degrees) of the best fit Euler pole.
+#' @returns numeric vector given the latitude (in degrees), longitude (in degrees), the misfit,
+#' and (for small circle structures) the apical half-angle (in degrees) of the best fit Euler pole.
 #'
 #' @export
 #'
-#' @details
-#' Based on Gray, N.H., Geiser, P.A., Geiser, J.R. (1980). On the least-square
+#' @references
+#' Gray, N.H., Geiser, P.A., Geiser, J.R. (1980). On the least-square
 #' fit of small and great circles to spherically projected data. Mathematical
 #' Geology, Vol. 12, No. 3, 1980
 #'

@@ -21,17 +21,12 @@ Densification would yield equally spaced points along the line.}
 (only if \code{densify.x = TRUE}).}
 }
 \value{
-numeric vector given the latitude (in degrees), longitude (in degrees), the misfit (0 - low, 1 - high),
-and (for small circle structures) the apical angle (in degrees) of the best fit Euler pole.
+numeric vector given the latitude (in degrees), longitude (in degrees), the misfit,
+and (for small circle structures) the apical half-angle (in degrees) of the best fit Euler pole.
 }
 \description{
 Finds the best Euler pole solution for a set of geographic locations that
 are aligned along a geological structure.
-}
-\details{
-Based on Gray, N.H., Geiser, P.A., Geiser, J.R. (1980). On the least-square
-fit of small and great circles to spherically projected data. Mathematical
-Geology, Vol. 12, No. 3, 1980
 }
 \examples{
 test <- smallcircle(30, 150, 35)
@@ -62,4 +57,9 @@ euler_reco(tintina, densify.x = TRUE)
 data(south_atlantic)
 euler_reco(south_atlantic, sc = TRUE)
 euler_reco(south_atlantic, densify.x = TRUE, sc = TRUE)
+}
+\references{
+Gray, N.H., Geiser, P.A., Geiser, J.R. (1980). On the least-square
+fit of small and great circles to spherically projected data. Mathematical
+Geology, Vol. 12, No. 3, 1980
 }
