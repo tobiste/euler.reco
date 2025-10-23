@@ -8,14 +8,14 @@ Description: Free and open-source R package for finding the best Euler
     pole solution describing the orientation of geological structures.
 License: MIT + file LICENSE
 Depends: 
-    R (>= 3.5.0)
+    R (>= 4.1.0)
 Imports: 
     ggplot2,
     graphics,
     dplyr,
     sf,
     smoothr,
-    structr,
+    structr (>= 0.2.2.9001),
     tectonicr,
     terra,
     tidyterra

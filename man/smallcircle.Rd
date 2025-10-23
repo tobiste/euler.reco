@@ -2,12 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{smallcircle}
 \alias{smallcircle}
-\title{#' @rdname coordinates
-geographical_to_acoscartesian <- function(x) {
-structr:::cartesian_to_acoscartesian(
-geographical_to_cartesian2(x)
-)
-}}
+\title{Small circle around a given pole}
 \usage{
 smallcircle(lat, lon, angle = 90, n = 1000L)
 }
@@ -27,16 +22,6 @@ If \code{angle = 90}, the great circle is returned.}
 }
 \description{
 Creates a small circle (or spherical cone) by specifying the axis and the half apical angle
-}
-\details{
-#' @rdname coordinates
-acoscartesian_to_geographical <- function(x) {
-cartesian_to_geographical2(
-structr:::acoscartesian_to_cartesian(x)
-)
-}
-
-Small circle around a given pole
 }
 \examples{
 smallcircle(45, 10, 12.3)

@@ -58,20 +58,6 @@ cartesian_to_geographical2 <- function(x) {
   tectonicr::rad2deg(cbind(lat, lon))
 }
 
-#' #' @rdname coordinates
-#' geographical_to_acoscartesian <- function(x) {
-#'   structr:::cartesian_to_acoscartesian(
-#'     geographical_to_cartesian2(x)
-#'   )
-#' }
-#'
-#' #' @rdname coordinates
-#' acoscartesian_to_geographical <- function(x) {
-#'   cartesian_to_geographical2(
-#'     structr:::acoscartesian_to_cartesian(x)
-#'   )
-#' }
-#'
 
 #' Small circle around a given pole
 #'
