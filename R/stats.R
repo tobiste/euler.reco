@@ -8,7 +8,7 @@
 #'
 #' @export
 #'
-#' @importFrom structr as.Vec3 mean delta var
+#' @importFrom structr as.Vec3 sph_mean delta sph_var
 #' @importFrom tectonicr rad2deg cartesian_to_geographical
 #'
 #' @examples
@@ -19,13 +19,13 @@ geo_stats <- function(x) {
     geographical_to_cartesian2() |>
     structr::as.Vec3()
   xmean <- x_cart |>
-    structr::mean() |>
+    structr::sph_mean() |>
     unclass() |>
     tectonicr::cartesian_to_geographical()
   xsd <- x_cart |>
     structr::delta() |>
     tectonicr::rad2deg()
-  xvar <- structr::var(x_cart)
+  xvar <- structr::sph_var(x_cart)
   c(lat = xmean[1], lon = xmean[2], delta = xsd, var = xvar)
 }
 
